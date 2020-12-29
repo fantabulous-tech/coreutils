@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 39953825e2b422f42879a552115a8d6b
+timeCreated: 1501673898
+licenseType: Pro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - IconAdd: {fileID: 2800000, guid: 9e66603bf0ba36741883e01e2ed740ec, type: 3}
+  - IconDelete: {fileID: 2800000, guid: 5cbae17d052c99449a6530d73ca28afa, type: 3}
+  - IconTop: {fileID: 2800000, guid: ec3536877da908140917322ea2e481cf, type: 3}
+  - IconUp: {fileID: 2800000, guid: 7cf05434b416e7741994e71548b05738, type: 3}
+  - IconDown: {fileID: 2800000, guid: 7a72343d8d0d3894681c04b34c6cce7b, type: 3}
+  - IconBottom: {fileID: 2800000, guid: 14a9350d88dcc4048a68352af7fb841f, type: 3}
+  - IconCollapseAll: {fileID: 2800000, guid: d6314675342ecec469ddfa86553da9df, type: 3}
+  - IconExpandAll: {fileID: 2800000, guid: e962d0b3573916347a2c63e047943568, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,20 @@
+{
+  "name": "com.fantabulous.coreutils",
+  "displayName": "CoreUtils",
+  "version": "1.0.0",
+  "unity": "2019.4",
+  "description": "Structural systems and tools that make using Unity easier and more productive.",
+  "keywords": [
+    "CoreUtils"
+  ],
+  "category": "Libraries",
+  "dependencies": {
+    "com.unity.textmeshpro": "2.1.1"
+  },
+  "repository": {
+    "url": "https://github.com/fantabulous-tech/coreutils.git",
+    "type": "git",
+    "revision": "43745ffec1bfe433cd3e02e88eb1f393097dffb9"
+  },
+  "type": "library"
+}
