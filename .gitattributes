@@ -1,0 +1,8 @@
+* text=auto
+
+# Unity files
+*.meta merge=unityyamlmerge -text
+*.unity merge=unityyamlmerge -text
+*.asset merge=unityyamlmerge -text
+*.prefab merge=unityyamlmerge -text
+
