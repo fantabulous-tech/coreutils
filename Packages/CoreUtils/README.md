@@ -9,7 +9,7 @@ To install from Unity v.2019.4+:
 - Open the Package Manager
 - Click the `+` button
 - Select 'Add Package from Git URL'
-- Paste in 'https://github.com/fantabulous-tech/coreutils.git?path=/Packages/CoreUtils'
+- Paste in: `https://github.com/fantabulous-tech/coreutils.git?path=/Packages/CoreUtils`
 
 If you are having trouble, you can manually change your `<Project>/Packages/maifest.json`:
 ```
