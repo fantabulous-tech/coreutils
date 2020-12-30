@@ -105,7 +105,9 @@ Transcribes components from one object to another including components in the hi
 
 ### Zero Selected
 
-Resets position and rotation of the selected game object to zero without moving the children.
+`GameObject > Zero Selected`
+
+Resets position and rotation of the selected game object to zero without moving the children. There's also a 'Zero Selected to Children Center' that centers the object on the boundaries of the child objects.
 
 NOTE: Sometimes has issues with rotation and RectTransforms
 
