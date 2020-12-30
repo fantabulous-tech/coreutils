@@ -331,7 +331,7 @@ namespace {0} {{
 
         private static TValue GetAttributeValue<TAttribute, TValue>(Type type, Func<TAttribute, TValue> valueSelector) where TAttribute : Attribute {
             TAttribute att = type.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault() as TAttribute;
-            return att != null ? valueSelector(att) : default(TValue);
+            return att != null ? valueSelector(att) : default;
         }
 
         private static T GetField<T>(object obj, string propertyName) {
@@ -347,11 +347,11 @@ namespace {0} {{
                 }
 
                 Debug.LogWarning("Property found, but it isn't of type " + typeof(T).Name);
-                return default(T);
+                return default;
             }
 
             Debug.LogWarning("Couldn't find property " + propertyName + " on " + obj);
-            return default(T);
+            return default;
         }
 
         // Creates a new ScriptableObject via the default Save File panel

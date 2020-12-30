@@ -5,8 +5,8 @@
         ///     Returns a promise of a tuple of the resolved results.
         /// </summary>
         public static IPromise<Tuple<T1, T2>> All<T1, T2>(IPromise<T1> p1, IPromise<T2> p2) {
-            T1 val1 = default(T1);
-            T2 val2 = default(T2);
+            T1 val1 = default;
+            T2 val2 = default;
             int numUnresolved = 2;
             bool alreadyRejected = false;
             Promise<Tuple<T1, T2>> promise = new Promise<Tuple<T1, T2>>();

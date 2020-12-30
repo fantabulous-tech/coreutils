@@ -102,7 +102,7 @@ namespace CoreUtils {
         private void SetAudioSource() {
             if (m_UseRandomVolume) {
                 //randomly apply a volume between the volume min max
-                m_AudioSource.volume = m_OriginalVolume * Random.Range(m_VolMin, m_VolMax);
+                m_AudioSource.volume = m_OriginalVolume*Random.Range(m_VolMin, m_VolMax);
             }
 
             if (m_UseRandomPitch) {

@@ -93,7 +93,7 @@ namespace CoreUtils.AssetBuckets {
             if (!EDITOR_IsValidDirectory(path)) {
                 return false;
             }
-            
+
             // If the guid already exists, then this path isn't missing.
             string guid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
             if (AssetRefs.Any(r => r.Guid != null && r.Guid.Equals(guid))) {

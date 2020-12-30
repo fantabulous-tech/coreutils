@@ -12,10 +12,6 @@ namespace CoreUtils {
             }
         }
 
-        private bool CanForceAnim {
-            get {
-                return m_Animation;
-            }
-        }
+        private bool CanForceAnim => m_Animation;
     }
 }

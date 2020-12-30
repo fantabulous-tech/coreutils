@@ -1,8 +1,8 @@
-﻿using RSG.Promises;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using RSG.Exceptions;
+using RSG.Promises;
 
 namespace RSG {
     /// <summary>
@@ -391,8 +391,8 @@ namespace RSG {
             if (CurState != PromiseState.Pending) {
                 throw new PromiseStateException(
                     "Attempt to reject a promise that is already in state: " + CurState
-                    + ", a promise can only be rejected when it is still in state: "
-                    + PromiseState.Pending
+                                                                             + ", a promise can only be rejected when it is still in state: "
+                                                                             + PromiseState.Pending
                 );
             }
 
@@ -413,8 +413,8 @@ namespace RSG {
             if (CurState != PromiseState.Pending) {
                 throw new PromiseStateException(
                     "Attempt to resolve a promise that is already in state: " + CurState
-                    + ", a promise can only be resolved when it is still in state: "
-                    + PromiseState.Pending
+                                                                              + ", a promise can only be resolved when it is still in state: "
+                                                                              + PromiseState.Pending
                 );
             }
 

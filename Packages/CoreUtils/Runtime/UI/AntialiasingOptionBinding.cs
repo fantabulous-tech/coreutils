@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using CoreUtils.GameVariables;
+﻿using CoreUtils.GameVariables;
+using UnityEngine;
 
 namespace CoreUtils.UI {
     public class AntialiasingOptionBinding : MonoBehaviour {

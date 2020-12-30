@@ -44,10 +44,10 @@ namespace CoreUtils {
 
 #if UNITY_EDITOR
         private static void RaiseOnQuit(UnityEditor.PlayModeStateChange playModeChange) {
-			if (playModeChange == UnityEditor.PlayModeStateChange.ExitingPlayMode) {
-				RaiseOnQuit();
-			}
-		}
+            if (playModeChange == UnityEditor.PlayModeStateChange.ExitingPlayMode) {
+                RaiseOnQuit();
+            }
+        }
 #endif
 
         private static void RaiseOnQuit() {
@@ -58,10 +58,10 @@ namespace CoreUtils {
 
         private void OnDestroy() {
             RaiseOnQuit();
-			
-			Application.quitting -= RaiseOnQuit;
+
+            Application.quitting -= RaiseOnQuit;
 #if UNITY_EDITOR
-			UnityEditor.EditorApplication.playModeStateChanged -= RaiseOnQuit;
+            UnityEditor.EditorApplication.playModeStateChanged -= RaiseOnQuit;
 #endif
         }
     }

@@ -1,7 +1,7 @@
-﻿using TMPro;
+﻿using CoreUtils.GameVariables;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using CoreUtils.GameVariables;
 
 namespace CoreUtils.UI {
     public class SliderBinding : MonoBehaviour {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CoreUtils;
 using UnityEngine;
 
 namespace CoreUtils {
@@ -131,8 +130,8 @@ namespace CoreUtils {
 
             public string Name => m_NameFunc();
 
-            public Action Action { get; private set; }
-            public KeyType Type { get; private set; }
+            public Action Action { get; }
+            public KeyType Type { get; }
 
             public int Count => m_Keys.Length;
             public object MainKey => m_MainKey;

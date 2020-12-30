@@ -1,4 +1,3 @@
-using System;
 using CoreUtils.GameVariables;
 using UnityEngine;
 using UnityEngine.Events;

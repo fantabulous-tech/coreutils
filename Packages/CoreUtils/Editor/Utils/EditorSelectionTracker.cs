@@ -1,14 +1,13 @@
-using System;
 using UnityEditor;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 namespace CoreUtils.Editor {
     public static class EditorSelectionTracker {
         private static Object s_LastSelection;
         private static int s_LastSelectionCount;
 
-        public static event Action<Object> SelectionChanged;
-        public static event Action<Object[]> SelectedObjectsChanged;
+        public static event System.Action<Object> SelectionChanged;
+        public static event System.Action<Object[]> SelectedObjectsChanged;
 
         static EditorSelectionTracker() {
             EditorApplication.update -= Update;

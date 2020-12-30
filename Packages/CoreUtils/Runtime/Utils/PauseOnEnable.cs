@@ -1,4 +1,3 @@
-using CoreUtils.GameVariables;
 using UnityEngine;
 
 namespace CoreUtils {

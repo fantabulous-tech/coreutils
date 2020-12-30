@@ -61,7 +61,7 @@ namespace CoreUtils {
             }
 #endif
             // Application.Quit();
-            
+
             // Work around for crash on quit.
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }

@@ -45,7 +45,7 @@ namespace CoreUtils {
             foreach (Transform item in transform) {
                 item.gameObject.SetActive(m_DefaultState == item.gameObject);
             }
-            
+
             // Set first state explicitly.
             ChangeState(m_DefaultState);
         }

@@ -1,8 +1,8 @@
-﻿using RSG.Promises;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using RSG.Exceptions;
+using RSG.Promises;
 using UnityEngine;
 
 namespace RSG {
@@ -206,7 +206,7 @@ namespace RSG {
             Exception = exception;
         }
 
-        public Exception Exception { get; private set; }
+        public Exception Exception { get; }
     }
 
     /// <summary>

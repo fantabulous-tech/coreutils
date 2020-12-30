@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
@@ -24,7 +23,7 @@ namespace CoreUtils {
 
             // Create the starting animation clip.
             AnimationClipPlayable animPlayable = AnimationClipPlayable.Create(m_Graph, animClip);
-            
+
             // Create the transition mixer for changing animations over time.
             AnimationMixerPlayable transitionMixer = AnimationMixerPlayable.Create(m_Graph, 2);
 

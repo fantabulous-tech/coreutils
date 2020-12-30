@@ -24,7 +24,7 @@ namespace CoreUtils {
 
         public static T RandomItemFromCollection<T>(IList<T> list) {
             if (list == null || list.Count == 0) {
-                return default(T);
+                return default;
             }
             int index = Random.Range(0, list.Count);
             return list[index];
@@ -133,14 +133,14 @@ namespace CoreUtils {
 
         public static T GetFirst<T>(this IList<T> list) {
             if (list == null || list.Count == 0) {
-                return default(T);
+                return default;
             }
             return list[0];
         }
 
         public static T GetLast<T>(this IList<T> list) {
             if (list == null || list.Count == 0) {
-                return default(T);
+                return default;
             }
             return list[list.Count - 1];
         }

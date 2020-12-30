@@ -133,7 +133,7 @@ namespace CoreUtils {
             text = text.ReplaceRegex(@"[A-Z][a-z]", " $0").ReplaceRegex(@"([0-9])([A-Za-z])|([A-Za-z])([0-9])", "$1$3 $2$4");
 
             text = RemoveSymbols(text, removeSingleLetters);
-            
+
             if (removeNumbers) {
                 text = RemoveNumbers(text, removeSingleLetters);
             } else if (removeSingleLetters) {

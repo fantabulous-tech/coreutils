@@ -1,5 +1,4 @@
-﻿using CoreUtils.GameEvents;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CoreUtils.GameVariables {
     [CreateAssetMenu(menuName = "GameVariable/String", order = (int) MenuOrder.VariableString)]

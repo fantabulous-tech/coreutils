@@ -117,7 +117,7 @@ namespace CoreUtils {
 
         public static T GetRandomItem<T>(this IEnumerable<T> items) {
             T[] enumerable = items as T[] ?? items.ToArray();
-            return enumerable.Length == 0 ? default(T) : enumerable.ElementAt(Random.Range(0, enumerable.Length));
+            return enumerable.Length == 0 ? default : enumerable.ElementAt(Random.Range(0, enumerable.Length));
         }
 
         public static string NameOrNull(this Object o) {
@@ -278,7 +278,7 @@ namespace CoreUtils {
         }
 
         public static T MaxBy<T>(this IEnumerable<T> list, Converter<T, float> converter) {
-            T maxItem = default(T);
+            T maxItem = default;
             float max = float.MinValue;
 
             foreach (T item in list) {

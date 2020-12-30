@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace CoreUtils.Editor {
     /// <summary>
@@ -205,7 +203,6 @@ namespace CoreUtils.Editor {
                 UpdateDisplayString(selectButtonRect.width);
 
                 NewObject = EditorGUI.ObjectField(selectButtonRect, null, typeof(Object), true);
-
 
                 if (GUI.Button(deleteButtonRect, new GUIContent("X", "Remove bookmark."))) {
                     return true;

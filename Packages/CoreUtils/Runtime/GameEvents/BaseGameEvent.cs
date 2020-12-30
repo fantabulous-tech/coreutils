@@ -52,7 +52,7 @@ namespace CoreUtils.GameEvents {
         }
 
         protected override void RaiseDefault() {
-            Raise(default(T));
+            Raise(default);
         }
 
         public void Raise(T value) {

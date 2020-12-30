@@ -57,9 +57,9 @@ namespace CoreUtils.AssetBuckets {
                 Destroy(instance);
             }
         }
-        
+
         public void RefreshName(T instance) {
-            foreach (var i in Instances) {
+            foreach (KeyValuePair<string, T> i in Instances) {
                 if (i.Value == instance) {
                     Instances.Remove(i.Key);
                     string assetName = GetName(instance);

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CoreUtils.AssetBuckets {
     public class PrefabInstanceTracker : MonoBehaviour {
         private string m_Name;
-        
+
         public string Name {
             get => m_Name ?? name;
             set => m_Name = value;

@@ -11,7 +11,7 @@ namespace CoreUtils {
         public UnityEvent OnFirstStateExited;
         public UnityEvent OnLastStateEntered;
         public UnityEvent OnLastStateExited;
- 
+
         private void OnEnable() {
             m_StateMachine.OnStateEntered += OnStateEntered.Invoke;
             m_StateMachine.OnStateExited += OnStateExited.Invoke;
@@ -20,7 +20,7 @@ namespace CoreUtils {
             m_StateMachine.OnLastStateEntered += OnLastStateEntered.Invoke;
             m_StateMachine.OnLastStateExited += OnLastStateExited.Invoke;
         }
- 
+
         private void OnDisable() {
             if (m_StateMachine != null) {
                 m_StateMachine.OnStateEntered -= OnStateEntered.Invoke;

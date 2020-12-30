@@ -1,6 +1,4 @@
-﻿using System;
-using CoreUtils;
-using CoreUtils.GameVariables;
+﻿using CoreUtils.GameVariables;
 using TMPro;
 using UnityEngine;
 

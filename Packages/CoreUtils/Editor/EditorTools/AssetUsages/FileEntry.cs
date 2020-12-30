@@ -5,31 +5,31 @@ using JetBrains.Annotations;
 using SQLite4Unity3d;
 
 namespace CoreUtils.Editor.AssetUsages {
-	[Serializable]
-	public class FileEntry {
-		[PrimaryKey, UsedImplicitly]
-		public Guid Guid { get; set; }
+    [Serializable]
+    public class FileEntry {
+        [PrimaryKey, UsedImplicitly]
+        public Guid Guid { get; set; }
 
-		[UsedImplicitly]
-		public string Path { get; set; }
+        [UsedImplicitly]
+        public string Path { get; set; }
 
-		private string m_DisplayPath;
- 
-		public string DisplayPath => m_DisplayPath ?? (m_DisplayPath = Path.ReplaceRegex("^.*Assets/", "", RegexOptions.IgnoreCase));
+        private string m_DisplayPath;
 
-		public bool Exists => File.Exists(Path);
+        public string DisplayPath => m_DisplayPath ?? (m_DisplayPath = Path.ReplaceRegex("^.*Assets/", "", RegexOptions.IgnoreCase));
 
-		public string GuidString => Guid.ToString().Replace("-", "");
+        public bool Exists => File.Exists(Path);
 
-		public FileEntry() { }
+        public string GuidString => Guid.ToString().Replace("-", "");
 
-		public FileEntry(Guid guid, string path) {
-			Guid = guid;
-			Path = path;
-		}
+        public FileEntry() { }
 
-		public override string ToString() {
-			return $"[File: Guid={Guid}, Path={Path}]";
-		}
-	}
+        public FileEntry(Guid guid, string path) {
+            Guid = guid;
+            Path = path;
+        }
+
+        public override string ToString() {
+            return $"[File: Guid={Guid}, Path={Path}]";
+        }
+    }
 }

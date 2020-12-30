@@ -8,7 +8,7 @@ namespace CoreUtils {
         [SerializeField] private Vector3 m_Axis = Vector3.up;
 
         private void OnEnable() {
-            Quaternion rotation =  Quaternion.AngleAxis(Random.Range(m_Min, m_Max), m_Axis);
+            Quaternion rotation = Quaternion.AngleAxis(Random.Range(m_Min, m_Max), m_Axis);
 
             if (m_Local) {
                 transform.localRotation = rotation;

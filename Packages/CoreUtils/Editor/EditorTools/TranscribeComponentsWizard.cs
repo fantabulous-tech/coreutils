@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using EditorStyles = UnityEditor.EditorStyles;
 using Object = UnityEngine.Object;
 
 namespace CoreUtils.Editor {
@@ -162,7 +161,7 @@ namespace CoreUtils.Editor {
                 RowLayout layout = new RowLayout(indentLevel);
 
                 GameObject newSource = (GameObject) EditorGUI.ObjectField(layout.SourceRect, Source, typeof(GameObject), true);
-                
+
                 if (!Target) {
                     if (GUI.Button(layout.DividerRect, "->")) {
                         CopyGameObject();

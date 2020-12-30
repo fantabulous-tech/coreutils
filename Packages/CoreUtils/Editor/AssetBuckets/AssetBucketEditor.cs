@@ -93,7 +93,7 @@ namespace CoreUtils.AssetBuckets {
             }
 
             EditorGUILayout.Space();
-            
+
             ShowAssets = EditorGUILayout.Foldout(ShowAssets, $"Asset List (x{m_AssetItems.Length})");
 
             if (ShowAssets) {

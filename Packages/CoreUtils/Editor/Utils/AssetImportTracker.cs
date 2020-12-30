@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace CoreUtils.Editor {
     public class AssetImportTracker : AssetPostprocessor {

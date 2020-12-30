@@ -180,8 +180,8 @@ namespace CoreUtils {
 
                     m_HashCodes[i] = -1;
                     m_Next[i] = m_FreeList;
-                    m_Keys[i] = default(TKey);
-                    m_Values[i] = default(TValue);
+                    m_Keys[i] = default;
+                    m_Values[i] = default;
                     m_FreeList = i;
                     m_FreeCount++;
                     m_Version++;
@@ -273,7 +273,7 @@ namespace CoreUtils {
                 value = m_Values[index];
                 return true;
             }
-            value = default(TValue);
+            value = default;
             return false;
         }
 
@@ -341,7 +341,7 @@ namespace CoreUtils {
             internal Enumerator(SerializableDictionary<TKey, TValue> dictionary) {
                 m_Dictionary = dictionary;
                 m_Version = dictionary.m_Version;
-                Current = default(KeyValuePair<TKey, TValue>);
+                Current = default;
                 m_Index = 0;
             }
 
@@ -361,7 +361,7 @@ namespace CoreUtils {
                 }
 
                 m_Index = m_Dictionary.m_Count + 1;
-                Current = default(KeyValuePair<TKey, TValue>);
+                Current = default;
                 return false;
             }
 
@@ -372,7 +372,7 @@ namespace CoreUtils {
                 }
 
                 m_Index = 0;
-                Current = default(KeyValuePair<TKey, TValue>);
+                Current = default;
             }
 
             object IEnumerator.Current => Current;

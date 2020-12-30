@@ -20,7 +20,7 @@ namespace CoreUtils {
             }
 
             m_NextCheck = Time.time + m_CheckRate;
-                
+
             if (m_Bool.Value != m_Value) {
                 m_Bool.Value = m_Value;
             }

@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using Object = UnityEngine.Object;
+﻿using UnityEngine;
 
 namespace CoreUtils {
     /// <summary>
@@ -50,7 +48,7 @@ namespace CoreUtils {
                             s_Instance = singleton.GetOrAddComponent<T>();
                             DontDestroyOnLoad(s_Instance.gameObject);
                         } else {
-                            //Debug.Log("[Singleton] Using instance already created: " + s_Instance.name);
+                            Debug.Log("[Singleton] Using instance already created: " + s_Instance.name);
                         }
                     }
 
@@ -61,7 +59,7 @@ namespace CoreUtils {
 
         public virtual void OnEnable() {
             if (s_Instance == null) {
-                s_Instance = (T)this;
+                s_Instance = (T) this;
             } else if (s_Instance != this) {
                 LogDuplicateSingleton(s_Instance, this);
             }

@@ -2,7 +2,6 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using EditorStyles = UnityEditor.EditorStyles;
 
 namespace CoreUtils.Editor {
     public class ScreenshotTaker : EditorWindow {
@@ -10,8 +9,8 @@ namespace CoreUtils.Editor {
 
         [SerializeField] private Camera m_ScreenshotCamera;
 
-        private int m_ResWidth = Screen.width * 4;
-        private int m_ResHeight = Screen.height * 4;
+        private int m_ResWidth = Screen.width*4;
+        private int m_ResHeight = Screen.height*4;
         private int m_Scale = 1;
         private string m_Path = "";
         private RenderTexture m_RenderTexture;
@@ -36,7 +35,7 @@ namespace CoreUtils.Editor {
 
         private void OnGUI() {
             m_Scroll = GUILayout.BeginScrollView(m_Scroll);
-		
+
             EditorGUILayout.LabelField("Resolution", EditorStyles.boldLabel);
             m_ResWidth = EditorGUILayout.IntField("Width", m_ResWidth);
             m_ResHeight = EditorGUILayout.IntField("Height", m_ResHeight);
@@ -50,17 +49,21 @@ namespace CoreUtils.Editor {
             Rect textFieldRect = new Rect(contentRect.x, contentRect.y, contentRect.width - kButtonWidth, contentRect.height);
             Rect buttonRect = new Rect(textFieldRect.x + textFieldRect.width, textFieldRect.y, kButtonWidth, textFieldRect.height);
             EditorGUI.TextField(textFieldRect, m_Path);
-            if (GUI.Button(buttonRect, "Browse")) { GetPath(); }
+            if (GUI.Button(buttonRect, "Browse")) {
+                GetPath();
+            }
 
             // Camera
             m_ScreenshotCamera = EditorGUILayout.ObjectField("Camera", m_ScreenshotCamera, typeof(Camera), true) as Camera;
 
-            if (m_ScreenshotCamera == null) { m_ScreenshotCamera = FindObjectOfType<Camera>(); }
+            if (m_ScreenshotCamera == null) {
+                m_ScreenshotCamera = FindObjectOfType<Camera>();
+            }
 
             EditorGUILayout.LabelField("Default Options", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
 
-            float halfButtonWidth = EditorGUIUtility.currentViewWidth / 2 - 6;
+            float halfButtonWidth = EditorGUIUtility.currentViewWidth/2 - 6;
 
             // Screen Size button
             if (GUILayout.Button("Set To Screen Size", GUILayout.Width(halfButtonWidth))) {
@@ -77,10 +80,10 @@ namespace CoreUtils.Editor {
             }
 
             GUILayout.EndHorizontal();
-		
+
             // Screenshot resolution info.
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField($"Screenshot will be taken at {m_ResWidth * m_Scale} x {m_ResHeight * m_Scale} px", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Screenshot will be taken at {m_ResWidth*m_Scale} x {m_ResHeight*m_Scale} px", EditorStyles.boldLabel);
 
             // Take Screenshot button.
             if (GUILayout.Button("Take Screenshot", GUILayout.MinHeight(60))) {
@@ -93,8 +96,7 @@ namespace CoreUtils.Editor {
                 TakeHiResShot();
             }
             EditorGUILayout.Space();
-		
-		
+
             EditorGUILayout.BeginHorizontal();
 
             // Open Last Screenshot button.
@@ -113,8 +115,8 @@ namespace CoreUtils.Editor {
             EditorGUILayout.EndHorizontal();
 
             if (m_TakeHiResShot) {
-                int resWidthN = m_ResWidth * m_Scale;
-                int resHeightN = m_ResHeight * m_Scale;
+                int resWidthN = m_ResWidth*m_Scale;
+                int resHeightN = m_ResHeight*m_Scale;
                 RenderTexture rt = new RenderTexture(resWidthN, resHeightN, 24);
                 m_ScreenshotCamera.targetTexture = rt;
 
@@ -136,7 +138,7 @@ namespace CoreUtils.Editor {
             }
 
             EditorGUILayout.HelpBox("Requires Unity Pro.", MessageType.Info);
-		
+
             GUILayout.EndScrollView();
         }
 

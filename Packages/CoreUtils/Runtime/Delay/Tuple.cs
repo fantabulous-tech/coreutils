@@ -61,12 +61,12 @@
         /// <summary>
         ///     Gets the value of the current tuple's first component.
         /// </summary>
-        public T1 Item1 { get; private set; }
+        public T1 Item1 { get; }
 
         /// <summary>
         ///     Gets the value of the current tuple's second component.
         /// </summary>
-        public T2 Item2 { get; private set; }
+        public T2 Item2 { get; }
     }
 
     /// <summary>
@@ -85,17 +85,17 @@
         /// <summary>
         ///     Gets the value of the current tuple's first component.
         /// </summary>
-        public T1 Item1 { get; private set; }
+        public T1 Item1 { get; }
 
         /// <summary>
         ///     Gets the value of the current tuple's second component.
         /// </summary>
-        public T2 Item2 { get; private set; }
+        public T2 Item2 { get; }
 
         /// <summary>
         ///     Gets the value of the current tuple's third component.
         /// </summary>
-        public T3 Item3 { get; private set; }
+        public T3 Item3 { get; }
     }
 
     /// <summary>
@@ -116,21 +116,21 @@
         /// <summary>
         ///     Gets the value of the current tuple's first component.
         /// </summary>
-        public T1 Item1 { get; private set; }
+        public T1 Item1 { get; }
 
         /// <summary>
         ///     Gets the value of the current tuple's second component.
         /// </summary>
-        public T2 Item2 { get; private set; }
+        public T2 Item2 { get; }
 
         /// <summary>
         ///     Gets the value of the current tuple's third component.
         /// </summary>
-        public T3 Item3 { get; private set; }
+        public T3 Item3 { get; }
 
         /// <summary>
         ///     Gets the value of the current tuple's fourth component.
         /// </summary>
-        public T4 Item4 { get; private set; }
+        public T4 Item4 { get; }
     }
 }

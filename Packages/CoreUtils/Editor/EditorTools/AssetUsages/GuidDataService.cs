@@ -8,188 +8,187 @@ using UnityEditor;
 using UnityEngine;
 
 namespace CoreUtils.Editor.AssetUsages {
-	public static class GuidDataService {
-		private const string kDatabasePath = @"Library/GuidRefs.db";
-		private const string kLastScanKey = "AssetUsage.LastScan";
+    public static class GuidDataService {
+        private const string kDatabasePath = @"Library/GuidRefs.db";
+        private const string kLastScanKey = "AssetUsage.LastScan";
 
-		private static bool s_Init;
-		private static SQLiteConnection s_Connection;
-		private static DateTime s_LastScan;
+        private static bool s_Init;
+        private static SQLiteConnection s_Connection;
+        private static DateTime s_LastScan;
 
-		public static event AssetImportTracker.AssetsChangedHandler Updated;
+        public static event AssetImportTracker.AssetsChangedHandler Updated;
 
-		private static SQLiteConnection Connection => UnityUtils.GetOrSet(ref s_Connection, () => new SQLiteConnection(kDatabasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create));
+        private static SQLiteConnection Connection => UnityUtils.GetOrSet(ref s_Connection, () => new SQLiteConnection(kDatabasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create));
 
-		private enum RefreshSteps {
-			[ProgressStep("Gathering Files")] GatherFiles,
-			[ProgressStep("Scanning Files for References", 20)] ScanFiles,
-			[ProgressStep("Removing Old Files")] RemoveOldFiles
-		}
+        private enum RefreshSteps {
+            [ProgressStep("Gathering Files")] GatherFiles,
+            [ProgressStep("Scanning Files for References", 20)] ScanFiles,
+            [ProgressStep("Removing Old Files")] RemoveOldFiles
+        }
 
         [InitializeOnLoadMethod]
-        public static void AutoInit()
-        {
+        public static void AutoInit() {
             EditorApplication.delayCall += Init;
         }
-        
+
         public static void Init() {
             if (s_Init) {
-				return;
-			}
+                return;
+            }
 
-			s_Init = true;
+            s_Init = true;
 
-			AssetImportTracker.DelayedAssetsChanged -= OnAssetsChanged;
-			AssetImportTracker.DelayedAssetsChanged += OnAssetsChanged;
+            AssetImportTracker.DelayedAssetsChanged -= OnAssetsChanged;
+            AssetImportTracker.DelayedAssetsChanged += OnAssetsChanged;
 
-			// Test for database file.
-			if (!File.Exists(kDatabasePath)) {
-				Refresh();
-				return;
-			}
+            // Test for database file.
+            if (!File.Exists(kDatabasePath)) {
+                Refresh();
+                return;
+            }
 
-			// Test for database setup.
-			List<SQLiteConnection.ColumnInfo> result = Connection.GetTableInfo(nameof(UsageEntry));
+            // Test for database setup.
+            List<SQLiteConnection.ColumnInfo> result = Connection.GetTableInfo(nameof(UsageEntry));
 
-			if (result == null || result.Count == 0) {
-				Refresh();
-				return;
-			}
+            if (result == null || result.Count == 0) {
+                Refresh();
+                return;
+            }
 
-			// Test for daily refresh.
-			string lastScan = EditorPrefs.GetString(kLastScanKey);
+            // Test for daily refresh.
+            string lastScan = EditorPrefs.GetString(kLastScanKey);
 
-			if (DateTime.TryParse(lastScan, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime lastScanTime)) {
-				s_LastScan = lastScanTime;
-			} else {
-				s_LastScan = DateTime.MinValue;
-			}
+            if (DateTime.TryParse(lastScan, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime lastScanTime)) {
+                s_LastScan = lastScanTime;
+            } else {
+                s_LastScan = DateTime.MinValue;
+            }
 
-			if (s_LastScan < DateTime.Today - TimeSpan.FromDays(7)) {
-				Refresh();
-			}
+            if (s_LastScan < DateTime.Today - TimeSpan.FromDays(7)) {
+                Refresh();
+            }
 
-			AssetImportTracker.DelayedAssetsChanged -= OnAssetsChanged;
-			AssetImportTracker.DelayedAssetsChanged += OnAssetsChanged;
-		}
+            AssetImportTracker.DelayedAssetsChanged -= OnAssetsChanged;
+            AssetImportTracker.DelayedAssetsChanged += OnAssetsChanged;
+        }
 
-		private static void OnAssetsChanged(AssetChanges changes) {
-			changes.Deleted.ForEach(RemoveFileByPath);
-			changes.MovedFrom.ForEach(RemoveFileByPath);
-			changes.Imported.ForEach(UpdateFileByPath);
-			changes.MovedTo.ForEach(UpdateFileByPath);
+        private static void OnAssetsChanged(AssetChanges changes) {
+            changes.Deleted.ForEach(RemoveFileByPath);
+            changes.MovedFrom.ForEach(RemoveFileByPath);
+            changes.Imported.ForEach(UpdateFileByPath);
+            changes.MovedTo.ForEach(UpdateFileByPath);
 
-			// Don't need 'MovedTo' since they are included in the 'Imported' list.
-			// changes.MovedTo.ForEach(UpdateFileByPath);
-			RaiseUpdated(changes);
-		}
+            // Don't need 'MovedTo' since they are included in the 'Imported' list.
+            // changes.MovedTo.ForEach(UpdateFileByPath);
+            RaiseUpdated(changes);
+        }
 
-		public static void Refresh() {
-			Init();
-			Connection.DropTable<FileEntry>();
-			Connection.DropTable<UsageEntry>();
+        public static void Refresh() {
+            Init();
+            Connection.DropTable<FileEntry>();
+            Connection.DropTable<UsageEntry>();
 
-			Debug.Log($"<color=#cc00ff>AssetUsages</color> : Refreshing DB. (Last Refresh: {s_LastScan})");
+            Debug.Log($"<color=#cc00ff>AssetUsages</color> : Refreshing DB. (Last Refresh: {s_LastScan})");
 
-			ProgressBarEnum<RefreshSteps> mainProgress = new ProgressBarEnum<RefreshSteps>("Refreshing Guid Reference Database", true);
-			
-			try {
-				Connection.CreateTable<FileEntry>();
-				Connection.CreateTable<UsageEntry>();
-				Connection.CreateIndex(nameof(UsageEntry), "UserGuid");
-				Connection.CreateIndex(nameof(UsageEntry), "ResourceGuid");
-			}
-			catch (DllNotFoundException) {
-				s_Connection = null;
-				Debug.LogError("<color=#cc00ff>AssetUsages</color> : DB refresh failed. SQLite DLL not found. Please restart Unity.");
-				return;
-			}
+            ProgressBarEnum<RefreshSteps> mainProgress = new ProgressBarEnum<RefreshSteps>("Refreshing Guid Reference Database", true);
 
-			mainProgress.StartStep(RefreshSteps.GatherFiles);
-			DateTime startTime = DateTime.Now;
-			Connection.BeginTransaction();
+            try {
+                Connection.CreateTable<FileEntry>();
+                Connection.CreateTable<UsageEntry>();
+                Connection.CreateIndex(nameof(UsageEntry), "UserGuid");
+                Connection.CreateIndex(nameof(UsageEntry), "ResourceGuid");
+            }
+            catch (DllNotFoundException) {
+                s_Connection = null;
+                Debug.LogError("<color=#cc00ff>AssetUsages</color> : DB refresh failed. SQLite DLL not found. Please restart Unity.");
+                return;
+            }
 
-			try {
-				//ScanFilesManually(mainProgress);
-				ScanAssetDatabase(mainProgress);
-			}
-			catch (ProgressBar.UserCancelledException) {
-				Debug.LogWarning("Scan incomplete due to cancellation.");
-			}
+            mainProgress.StartStep(RefreshSteps.GatherFiles);
+            DateTime startTime = DateTime.Now;
+            Connection.BeginTransaction();
 
-			Connection.Commit();
-			s_LastScan = startTime;
-			EditorPrefs.SetString(kLastScanKey, s_LastScan.ToString(CultureInfo.InvariantCulture));
-			mainProgress.Done();
+            try {
+                //ScanFilesManually(mainProgress);
+                ScanAssetDatabase(mainProgress);
+            }
+            catch (ProgressBar.UserCancelledException) {
+                Debug.LogWarning("Scan incomplete due to cancellation.");
+            }
 
-			RaiseUpdated();
-		}
+            Connection.Commit();
+            s_LastScan = startTime;
+            EditorPrefs.SetString(kLastScanKey, s_LastScan.ToString(CultureInfo.InvariantCulture));
+            mainProgress.Done();
 
-		private static void ScanAssetDatabase(ProgressBarEnum<RefreshSteps> mainProgress) {
-			string[] allAssetPaths = AssetDatabase.GetAllAssetPaths();
-			Dictionary<Guid, FileEntry> fileLookup = Connection.Table<FileEntry>().ToDictionary(f => f.Guid);
-			ProgressBarCounted scanProgress = new ProgressBarCounted(mainProgress.StartStep(RefreshSteps.ScanFiles), allAssetPaths.Length);
+            RaiseUpdated();
+        }
 
-			for (int i = 0; i < allAssetPaths.Length; i++) {
-				string path = allAssetPaths[i];
+        private static void ScanAssetDatabase(ProgressBarEnum<RefreshSteps> mainProgress) {
+            string[] allAssetPaths = AssetDatabase.GetAllAssetPaths();
+            Dictionary<Guid, FileEntry> fileLookup = Connection.Table<FileEntry>().ToDictionary(f => f.Guid);
+            ProgressBarCounted scanProgress = new ProgressBarCounted(mainProgress.StartStep(RefreshSteps.ScanFiles), allAssetPaths.Length);
 
-				if (!IsValidFile(path)) {
-					continue;
-				}
+            for (int i = 0; i < allAssetPaths.Length; i++) {
+                string path = allAssetPaths[i];
 
-				scanProgress.StartStep(i, "Scanning " + Path.GetFileNameWithoutExtension(path));
-				Guid fileGuid = new Guid(AssetDatabase.AssetPathToGUID(path));
-				fileLookup.Remove(fileGuid);
-				UpdateAssetInGuidDatabase(path, fileGuid, false);
-			}
+                if (!IsValidFile(path)) {
+                    continue;
+                }
 
-			ProgressBarCounted deleteProgress = new ProgressBarCounted(mainProgress.StartStep(RefreshSteps.RemoveOldFiles), fileLookup.Count);
-			int step = 0;
+                scanProgress.StartStep(i, "Scanning " + Path.GetFileNameWithoutExtension(path));
+                Guid fileGuid = new Guid(AssetDatabase.AssetPathToGUID(path));
+                fileLookup.Remove(fileGuid);
+                UpdateAssetInGuidDatabase(path, fileGuid, false);
+            }
 
-			foreach (FileEntry file in fileLookup.Values) {
-				deleteProgress.StartStep(step, "Deleting " + file.DisplayPath);
-				RemoveFileByGuid(file.Guid, file.Path);
-				step++;
-			}
-		}
+            ProgressBarCounted deleteProgress = new ProgressBarCounted(mainProgress.StartStep(RefreshSteps.RemoveOldFiles), fileLookup.Count);
+            int step = 0;
 
-		private static bool IsValidFile(string path) {
-			return File.Exists(path) && !path.Contains(":/");
-		}
+            foreach (FileEntry file in fileLookup.Values) {
+                deleteProgress.StartStep(step, "Deleting " + file.DisplayPath);
+                RemoveFileByGuid(file.Guid, file.Path);
+                step++;
+            }
+        }
 
-		private static void UpdateFileByPath(string path) {
-			string guid = AssetDatabase.AssetPathToGUID(path);
-			try {
-				UpdateAssetInGuidDatabase(path, new Guid(guid), true);
-			}
-			catch (DllNotFoundException) {
-				Debug.LogError("Unable to update paths. SQLite DLL was not found. Please restart Unity.");
-			}
-			catch (Exception e) {
-				Debug.LogError($"Unable to update path '{path}' (guid = {guid}) because {e.Message}");
-			}
-		}
+        private static bool IsValidFile(string path) {
+            return File.Exists(path) && !path.Contains(":/");
+        }
 
-		private static void UpdateAssetInGuidDatabase(string path, Guid fileGuid, bool removeOldRefs) {
-			if (removeOldRefs) {
-				RemoveFileRefsByGuid(fileGuid);
-			}
+        private static void UpdateFileByPath(string path) {
+            string guid = AssetDatabase.AssetPathToGUID(path);
+            try {
+                UpdateAssetInGuidDatabase(path, new Guid(guid), true);
+            }
+            catch (DllNotFoundException) {
+                Debug.LogError("Unable to update paths. SQLite DLL was not found. Please restart Unity.");
+            }
+            catch (Exception e) {
+                Debug.LogError($"Unable to update path '{path}' (guid = {guid}) because {e.Message}");
+            }
+        }
 
-			Connection.InsertOrReplace(new FileEntry(fileGuid, path));
-			AddAssetDatabaseRefs(path, fileGuid);
-		}
+        private static void UpdateAssetInGuidDatabase(string path, Guid fileGuid, bool removeOldRefs) {
+            if (removeOldRefs) {
+                RemoveFileRefsByGuid(fileGuid);
+            }
 
-		private static void AddAssetDatabaseRefs(string refFile, Guid refGuid) {
-			string[] files = AssetDatabase.GetDependencies(refFile, false);
+            Connection.InsertOrReplace(new FileEntry(fileGuid, path));
+            AddAssetDatabaseRefs(path, fileGuid);
+        }
 
-			foreach (string file in files) {
-				Guid guid = new Guid(AssetDatabase.AssetPathToGUID(file));
-				Connection.InsertOrReplace(new UsageEntry(refGuid, guid));
-			}
-		}
+        private static void AddAssetDatabaseRefs(string refFile, Guid refGuid) {
+            string[] files = AssetDatabase.GetDependencies(refFile, false);
 
-		private static void RemoveFileByPath(string path) {
-			Connection.Query<FileEntry>($@"
+            foreach (string file in files) {
+                Guid guid = new Guid(AssetDatabase.AssetPathToGUID(file));
+                Connection.InsertOrReplace(new UsageEntry(refGuid, guid));
+            }
+        }
+
+        private static void RemoveFileByPath(string path) {
+            Connection.Query<FileEntry>($@"
 DELETE
 FROM FileEntry
 WHERE FileEntry.Path = ""{path}""
@@ -204,35 +203,34 @@ WHERE EXISTS
 	WHERE (UsageEntry.ResourceGuid = FileEntry.Guid OR UsageEntry.UserGuid = FileEntry.Guid) AND FileEntry.Path = ""{path}""
 )
 ;");
-		}
+        }
 
-		private static void RemoveFileRefsByGuid(Guid guid) {
-			Connection.Query<FileEntry>($@"
+        private static void RemoveFileRefsByGuid(Guid guid) {
+            Connection.Query<FileEntry>($@"
 DELETE
 FROM UsageEntry
 WHERE UsageEntry.UserGuid = ""{guid}""
 ;");
-			Connection.Delete<FileEntry>(guid);
-		}
+            Connection.Delete<FileEntry>(guid);
+        }
 
-		private static void RemoveFileByGuid(Guid guid, string path) {
-			Connection.Query<FileEntry>($@"
+        private static void RemoveFileByGuid(Guid guid, string path) {
+            Connection.Query<FileEntry>($@"
 DELETE
 FROM UsageEntry
 WHERE UsageEntry.ResourceGuid = ""{guid}"" OR UsageEntry.UserGuid = ""{guid}""
 ;");
-			Connection.Delete<FileEntry>(guid);
-		}
+            Connection.Delete<FileEntry>(guid);
+        }
 
-		public static List<FileEntry> LoadUsing(Guid[] guids) {
+        public static List<FileEntry> LoadUsing(Guid[] guids) {
+            if (!guids.Any()) {
+                return new List<FileEntry>();
+            }
 
-			if (!guids.Any()) {
-				return new List<FileEntry>();
-			}
+            string search = guids.AggregateToString(" OR ", g => "UsageEntry.UserGuid = \"" + g + "\"");
 
-			string search = guids.AggregateToString(" OR ", g => "UsageEntry.UserGuid = \"" + g + "\"");
-
-			return Connection.Query<FileEntry>($@"
+            return Connection.Query<FileEntry>($@"
 SELECT FileEntry.*
 FROM FileEntry
 JOIN UsageEntry ON UsageEntry.ResourceGuid = FileEntry.Guid
@@ -240,34 +238,32 @@ WHERE {search}
 GROUP BY FileEntry.Path
 ORDER BY FileEntry.Path ASC
 ;").Where(f => !guids.Contains(f.Guid)).ToList();
-		}
+        }
 
-		public static List<FileEntry> LoadFiles(Guid[] guids) {
+        public static List<FileEntry> LoadFiles(Guid[] guids) {
+            if (!guids.Any()) {
+                return new List<FileEntry>();
+            }
 
-			if (!guids.Any()) {
-				return new List<FileEntry>();
-			}
+            string search = guids.AggregateToString(" OR ", g => "Guid = \"" + g + "\"");
 
-			string search = guids.AggregateToString(" OR ", g => "Guid = \"" + g + "\"");
-
-			return Connection.Query<FileEntry>($@"
+            return Connection.Query<FileEntry>($@"
 SELECT FileEntry.*
 FROM FileEntry
 WHERE {search}
 GROUP BY FileEntry.Path
 ORDER BY FileEntry.Path ASC
 ;").ToList();
-		}
+        }
 
-		public static List<FileEntry> LoadUsedBy(Guid[] guids) {
+        public static List<FileEntry> LoadUsedBy(Guid[] guids) {
+            if (!guids.Any()) {
+                return new List<FileEntry>();
+            }
 
-			if (!guids.Any()) {
-				return new List<FileEntry>();
-			}
+            string search = guids.AggregateToString(" OR ", g => "UsageEntry.ResourceGuid = \"" + g + "\"");
 
-			string search = guids.AggregateToString(" OR ", g => "UsageEntry.ResourceGuid = \"" + g + "\"");
-
-			return Connection.Query<FileEntry>($@"
+            return Connection.Query<FileEntry>($@"
 SELECT FileEntry.*
 FROM FileEntry
 JOIN UsageEntry ON UsageEntry.UserGuid = FileEntry.Guid
@@ -275,10 +271,10 @@ WHERE {search}
 GROUP BY FileEntry.Path
 ORDER BY FileEntry.Path ASC
 ;").Where(f => !guids.Contains(f.Guid)).ToList();
-		}
+        }
 
-		private static void RaiseUpdated(AssetChanges changes = new AssetChanges()) {
-			Updated?.Invoke(changes);
-		}
-	}
+        private static void RaiseUpdated(AssetChanges changes = new AssetChanges()) {
+            Updated?.Invoke(changes);
+        }
+    }
 }
