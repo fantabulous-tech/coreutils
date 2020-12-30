@@ -98,7 +98,7 @@ A way to quickly replace game objects with a replacement prefab.
 
 NOTE: Both a GameObject in the Hierarchy Window and a Prefab in the Project Window must be selected. (Hold Ctrl to multi-select.)
 
-### Transcript Components Wizard
+### Transcribe Components Wizard
 
 `Tools > Transcribe Components`
 
