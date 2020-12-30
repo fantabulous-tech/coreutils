@@ -68,13 +68,13 @@ A window that allows you to quickly take screenshots at any resolution on any ca
 
 `Window > Object Bookmarks`
 
-A conveniant window to bookmark scene and project object references and allow the to be quickly re-selected and opened.
+A conveniant window to bookmark scene and project object references and allow them to be quickly re-selected and opened.
 
 ### Replace Prefab Instance
 
-`Tools > Replace Prefab Instance (Ctrl+Alt+$)`
+`Tools > Replace Prefab Instance (Ctrl+Alt+R)`
 
-A way to quickly replace game objects with a replacement prefab.
+A way to quickly replace game objects with a replacement prefab while maintaining the object's position and rotation.
 
 NOTE: Both a GameObject in the Hierarchy Window and a Prefab in the Project Window must be selected. (Hold Ctrl to multi-select.)
 
@@ -82,7 +82,9 @@ NOTE: Both a GameObject in the Hierarchy Window and a Prefab in the Project Wind
 
 `Tools > Transcribe Components`
 
-Transcribes components from one object to another including components in the hierarchy and optionally creating missing game objects along the way.
+Transcribes components from one object to another including components in the hierarchy and optionally creating missing game objects along the way. Also transcribes the local references of the components.
+
+This is especially useful for copying components added on one complex .fbx hierarchy (e.g. a character .fbx) to another.
 
 ### Zero Selected
 
@@ -97,21 +99,35 @@ NOTE: Sometimes has issues with rotation and RectTransforms
 
 ### Asset Buckets
 
+`Create Menu > Buckets > ...`
+
 A system for auto-adding assets to a ScriptableObject based on the project's folder structure. The bucket can then be easily referenced by different systems to access those assets without relying on Resource folders.
 
 ### Delay Sequences
+
+e.g. `Delay.For(3, this).Then(Action)`
 
 A system for chaining delay timers (seconds or frames) and waiting for testable events (predicates).
 
 ### GameEvents and GameVariables
 
+`Create Menu > Game Events > ...`
+
+`Create Menu > Game Variables > ...`
+
 A system for creating generic events and variables as ScriptableObjects that can be referenced by systems that don't know about one another. This is the glue that can quickly connect various components across loading/unloading scenes and prefabs.
 
 ### Singleton
 
+e.g. `YourComponent : Singleton<YourComponent> {}`
+
 Easy way to make sure you have a component that exists once and only once and access it globally.
 
 ### StateMachine
+
+`Add Component > State Machine`
+
+`Add Component > State`
 
 A cleaned up version of the [Surge State Machine](http://surge.pixelplacement.com/statemachine.html) that includes clickable states at editor time and other improvements.
 
