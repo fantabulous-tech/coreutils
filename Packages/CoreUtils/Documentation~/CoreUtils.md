@@ -3,26 +3,6 @@
 Structural systems and tools that make using Unity easier and more productive.
 
 
-## Installation
-
-To install from Unity v.2019.4+:
-- Open the Package Manager
-- Click the `+` button
-- Select 'Add Package from Git URL'
-- Paste in: `https://github.com/fantabulous-tech/coreutils.git?path=/Packages/CoreUtils`
-
-If you are having trouble, you can manually change your `<Project>/Packages/maifest.json`:
-```
-{
-  "dependencies": {
-    "tech.fantabulous.coreutils": "https://github.com/fantabulous-tech/coreutils.git?path=/Packages/CoreUtils"
-  }
-}
-```
-
-And finally, if those don't work, you can manually copy `Packages/CoreUtils` folder into your down `<Project>/Packages/` folder.
-
-
 ## Editor Tools
 
 ### Asset Dragnet
