@@ -4,6 +4,8 @@ Structural systems and tools that make using Unity easier and more productive.
 
 ## Installation
 
+### Option #1: Package Manager Window
+
 To install from Unity v.2019.4+:
 - Make sure you have [git](https://git-scm.com/downloads) installed and in your [PATH variable](https://www.google.com/search?q=windows+10+environment+variables+window)
 - Open the Package Manager
@@ -11,7 +13,9 @@ To install from Unity v.2019.4+:
 - Select 'Add Package from Git URL'
 - Paste in: `https://github.com/fantabulous-tech/coreutils.git?path=/Packages/CoreUtils`
 
-If you are having trouble, you can manually change your `<Project>/Packages/maifest.json`:
+### Option #2: Edit `manifest.json`
+
+Alternatively, you can manually change your `<Project>/Packages/maifest.json`:
 ```
 {
   "dependencies": {
@@ -20,11 +24,13 @@ If you are having trouble, you can manually change your `<Project>/Packages/maif
 }
 ```
 
-And finally, if those don't work or you don't want to install git, you can manually copy `Packages/CoreUtils` folder into your down `<Project>/Packages/` folder.
+### Option #3: Manual Copy of CoreUtils Folder
 
-## Package Documentation
+And finally, if those don't work or you don't want to install git, you can manually copy `Packages/CoreUtils` folder into your own `<Project>/Packages/` folder.
 
-See the [CoreUtils Unity Package README](https://github.com/fantabulous-tech/coreutils/blob/master/Packages/CoreUtils/Documentation~/CoreUtils.md) for more info about the individual tools and systems.
+## Core Utils Documentation
+
+See the [CoreUtils Unity Package Doc](https://github.com/fantabulous-tech/coreutils/blob/master/Packages/CoreUtils/Documentation~/CoreUtils.md) for more info about the individual tools and systems.
 
 ## License
 
