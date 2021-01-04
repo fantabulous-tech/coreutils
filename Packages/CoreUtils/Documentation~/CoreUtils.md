@@ -15,7 +15,7 @@ System for batch-renaming files based on Regex searches.
 
 `Window > Asset Usages`
 
-`Project Window > Rick-click Asset > Find All Uses in Project`
+`Project Window > Right-click Asset > Find All Uses in Project`
 
 Global asset reverse-lookup system.
 
