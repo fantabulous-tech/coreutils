@@ -98,8 +98,8 @@ namespace CoreUtils {
                 OnLastStateExited?.Invoke();
             }
 
-            OnStateExited?.Invoke(CurrentState);
             CurrentState.SetActive(false);
+            OnStateExited?.Invoke(CurrentState);
             m_CurrentState = null;
         }
 
@@ -171,10 +171,11 @@ namespace CoreUtils {
             if (index == transform.childCount - 1) {
                 OnLastStateEntered?.Invoke();
             }
+            
+            m_CurrentState.SetActive(true);
 
             Log($"(+) {name} ENTERED state: {state.name}");
             OnStateEntered?.Invoke(m_CurrentState);
-            m_CurrentState.SetActive(true);
         }
 
         private void Log(string message) {
