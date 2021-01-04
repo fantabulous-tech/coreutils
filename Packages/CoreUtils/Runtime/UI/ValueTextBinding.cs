@@ -1,36 +1,53 @@
 ﻿using CoreUtils.GameVariables;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CoreUtils.UI {
     public class ValueTextBinding : MonoBehaviour {
-        [SerializeField] private BaseGameVariable m_RangeVariable;
-        [SerializeField] private TextMeshProUGUI m_Label;
+        [FormerlySerializedAs("m_RangeVariable"),SerializeField, AutoFillAsset] private BaseGameVariable m_Variable;
+        [SerializeField, AutoFill] private TextMeshProUGUI m_Label;
+        [SerializeField] private string m_OptionalStringFormat;
 
         public UnityEventString OnChanged;
 
         private void OnEnable() {
-            m_RangeVariable.GenericEvent += OnVariableChanged;
+            m_Variable.GenericEvent += OnVariableChanged;
             OnVariableChanged();
         }
 
         private void OnDisable() {
-            if (m_RangeVariable != null) {
-                m_RangeVariable.GenericEvent -= OnVariableChanged;
+            if (m_Variable != null) {
+                m_Variable.GenericEvent -= OnVariableChanged;
             }
         }
 
         private void OnVariableChanged() {
-            if (m_Label != null) {
-                m_Label.text = m_RangeVariable.ValueString;
-            }
-            OnChanged.Invoke(m_RangeVariable.ValueString);
+            UpdateText();
+            OnChanged.Invoke(m_Variable.ValueString);
         }
 
         private void OnValidate() {
-            if (m_Label && m_RangeVariable) {
-                m_Label.text = m_RangeVariable.ValueString;
+            UpdateText();
+        }
+
+        private void UpdateText() {
+            if (!m_Label || !m_Variable) {
+                return;
             }
+
+            if (!m_OptionalStringFormat.IsNullOrEmpty()) {
+                switch (m_Variable) {
+                    case GameVariableInt gameVariableInt:
+                        m_Label.text = gameVariableInt.Value.ToString(m_OptionalStringFormat);
+                        return;
+                    case GameVariableFloat gameVariableFloat:
+                        m_Label.text = gameVariableFloat.Value.ToString(m_OptionalStringFormat);
+                        return;
+                }
+            }
+
+            m_Label.text = m_Variable.ValueString;
         }
     }
 }
