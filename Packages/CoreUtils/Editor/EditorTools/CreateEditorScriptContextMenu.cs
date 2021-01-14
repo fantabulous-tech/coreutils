@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
 namespace CoreUtils.Editor {
+    [UsedImplicitly]
     public static class CreateEditorScriptContextMenu {
         [MenuItem("Assets/Create/C# Editor Script", true)]
         private static bool ValidateCreateEditorScript() {
@@ -50,8 +52,8 @@ namespace CoreUtils.Editor {
             TextWriter writer = new StreamWriter(editorPath);
 
             writer.Write(@"using CoreUtils;
+using CoreUtils.Editor;
 using UnityEditor;
-using UnityEngine;
 
 {0}
 	[CustomEditor(typeof({1}))]
