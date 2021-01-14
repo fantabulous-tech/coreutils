@@ -6,7 +6,7 @@ namespace CoreUtils.Editor {
     public class TriggerSoundEditor : Editor<TriggerSound> {
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
-            if (GUILayout.Button("Test")) {
+            if (Application.isPlaying && GUILayout.Button("Test")) {
                 Target.PlaySound();
             }
         }
