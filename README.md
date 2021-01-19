@@ -15,7 +15,7 @@ To install from Unity v.2019.4+:
 
 ### Option #2: Edit `manifest.json`
 
-Alternatively, you can manually change your `<Project>/Packages/maifest.json`:
+Alternatively, you can manually change your `<Project>/Packages/manifest.json`:
 ```
 {
   "dependencies": {
@@ -28,7 +28,7 @@ Alternatively, you can manually change your `<Project>/Packages/maifest.json`:
 
 And finally, if those don't work or you don't want to install git, you can manually copy `Packages/CoreUtils` folder into your own `<Project>/Packages/` folder.
 
-## Core Utils Documentation
+## CoreUtils Documentation
 
 See the [CoreUtils Unity Package Doc](https://github.com/fantabulous-tech/coreutils/blob/master/Packages/CoreUtils/Documentation~/CoreUtils.md) for more info about the individual tools and systems.
 
