@@ -9,6 +9,7 @@ namespace CoreUtils.Editor {
     [CustomPropertyDrawer(typeof(AutoFillAttribute))]
     [CustomPropertyDrawer(typeof(AutoFillFromChildrenAttribute))]
     [CustomPropertyDrawer(typeof(AutoFillFromParentAttribute))]
+    [CustomPropertyDrawer(typeof(AutoFillFromSceneAttribute))]
     public class AutoFillDrawer : AttributeDrawer<AutoFillAttribute> {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             AutoFillAttribute autoFill = attribute as AutoFillAttribute;
@@ -83,6 +84,9 @@ namespace CoreUtils.Editor {
                         break;
                     case AutoFillFromParentAttribute _:
                         value = FindObjectInParent(root, searchType);
+                        break;
+                    case AutoFillFromSceneAttribute _:
+                        value = Object.FindObjectOfType(searchType);
                         break;
                     default:
                         value = FindObjectInSelf(root, searchType);
