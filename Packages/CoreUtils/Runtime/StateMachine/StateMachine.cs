@@ -44,6 +44,11 @@ namespace CoreUtils {
             // Initialize state visibility.
             foreach (Transform item in transform) {
                 item.gameObject.SetActive(m_DefaultState == item.gameObject);
+                State state = item.GetComponent<State>();
+
+                if (state) {
+                    state.Init();
+                }
             }
 
             // Set first state explicitly.

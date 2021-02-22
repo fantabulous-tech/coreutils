@@ -1,9 +1,12 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace CoreUtils {
     public class State : MonoBehaviour {
         [SerializeField, AutoFillFromParent] private StateMachine m_StateMachine;
+
+        private bool m_Init;
         
         public event Action OnEntered;
         public event Action OnExited;
@@ -39,17 +42,41 @@ namespace CoreUtils {
                 StateMachine.OnStateExited -= OnStateExited;
             }
         }
-        
-        
 
+        public void Init() {
+            if (m_Init) {
+                return;
+            }
+
+            m_Init = true;
+            StateMachine.OnStateEntered += OnStateEntered;
+            StateMachine.OnStateExited += OnStateExited;
+
+            StateEvents events = GetComponent<StateEvents>();
+
+            if (events) {
+                events.Init();
+            }
+
+            RaiseOnExited();
+        } 
+
+        [UsedImplicitly]
+        public void SetState() {
+            StateMachine.ChangeState(name);
+        }
+
+        [UsedImplicitly]
         public void ChangeState(int childIndex) {
             StateMachine.ChangeState(childIndex);
         }
 
+        [UsedImplicitly]
         public void ChangeState(GameObject state) {
             StateMachine.ChangeState(state.name);
         }
 
+        [UsedImplicitly]
         public void ChangeState(string state) {
             if (StateMachine == null) {
                 return;
@@ -57,14 +84,17 @@ namespace CoreUtils {
             StateMachine.ChangeState(state);
         }
 
+        [UsedImplicitly]
         public void Next() {
             StateMachine.Next();
         }
 
+        [UsedImplicitly]
         public void Previous() {
             StateMachine.Previous();
         }
 
+        [UsedImplicitly]
         public void Exit() {
             StateMachine.Exit();
         }
