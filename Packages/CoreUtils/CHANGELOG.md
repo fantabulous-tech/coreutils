@@ -4,8 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-- 
+<!-- ## [Unreleased]
+-  -->
+
+## [1.0.7] - 2020-2-3
+
+### Fixed
+- Incorrect `StateMachine` initialization
+- Handling of `PauseOnEnable` out-of-order enable/disables
+
+### Changed
+- Added min/max events to `GameVariableFloatRange`
+- Added optional `TriggerEvent` to `TriggerSound` component
 
 ## [1.0.6] - 2020-2-3
 
@@ -71,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.6...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.7...HEAD
+[1.0.7]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.3...v1.0.4
