@@ -1,4 +1,5 @@
 ﻿using System;
+using CoreUtils.GameEvents;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,7 +8,8 @@ using Random = UnityEngine.Random;
 namespace CoreUtils {
     public class TriggerSound : MonoBehaviour {
         [SerializeField] private string m_SoundName = "slap";
-        [SerializeField] private AudioSource m_AudioSource;
+        [SerializeField, AutoFillAsset(CanBeNull = true)] private GameEvent m_OptionalTriggerEvent;
+        [SerializeField, AutoFillFromChildren] private AudioSource m_AudioSource;
         [SerializeField] private float m_MinimumWait;
 
         [SerializeField, Tooltip("List of audio clips to play.")]
@@ -31,10 +33,10 @@ namespace CoreUtils {
         [Header("Random Pitch"), SerializeField, Tooltip("Use min and max random pitch levels when playing sounds.")]
         private bool m_UseRandomPitch = true;
 
-        [SerializeField, Tooltip("Minimum pitch that will be used when randomly set."), Range(-3.0f, 3.0f)]
+        [SerializeField, Tooltip("Minimum pitch that will be used when randomly set."), Range(0.01f, 3.0f)]
         private float m_PitchMin = 1.0f;
 
-        [SerializeField, Tooltip("Maximum pitch that will be used when randomly set."), Range(-3.0f, 3.0f)]
+        [SerializeField, Tooltip("Maximum pitch that will be used when randomly set."), Range(0.01f, 3.0f)]
         private float m_PitchMax = 1.0f;
 
         [Header("Delay Time"), SerializeField, Tooltip("Time to offset playback of sound")]
@@ -51,6 +53,10 @@ namespace CoreUtils {
             m_OriginalVolume = m_AudioSource.volume;
             m_Clip = m_AudioSource.clip;
 
+            if (m_OptionalTriggerEvent) {
+                m_OptionalTriggerEvent.GenericEvent += PlaySound;
+            }
+
             // audio source play on awake is true, just play the PlaySound immediately
             if (m_AudioSource.playOnAwake) {
                 PlaySound();
@@ -64,6 +70,12 @@ namespace CoreUtils {
             // in the case where both playOnAwake and playOnAwakeWithDelay are both set to true, just to the same as above, play the sound but with a delay
             else if (m_AudioSource.playOnAwake && m_PlayOnAwakeWithDelay) {
                 PlayWithDelay(m_DelayOffsetTime);
+            }
+        }
+
+        private void OnDestroy() {
+            if (m_OptionalTriggerEvent) {
+                m_OptionalTriggerEvent.GenericEvent -= PlaySound;
             }
         }
 
@@ -102,7 +114,7 @@ namespace CoreUtils {
         private void SetAudioSource() {
             if (m_UseRandomVolume) {
                 //randomly apply a volume between the volume min max
-                m_AudioSource.volume = m_OriginalVolume*Random.Range(m_VolMin, m_VolMax);
+                m_AudioSource.volume = m_OriginalVolume * Random.Range(m_VolMin, m_VolMax);
             }
 
             if (m_UseRandomPitch) {
