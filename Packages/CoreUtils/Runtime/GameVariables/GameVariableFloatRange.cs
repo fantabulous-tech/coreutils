@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace CoreUtils.GameVariables {
     [CreateAssetMenu(menuName = "GameVariable/FloatRange", order = (int) MenuOrder.VariableFloatRange)]
     public class GameVariableFloatRange : GameVariableFloat {
         [SerializeField] private float m_MinValue;
         [SerializeField] private float m_MaxValue = 1;
+
+        public event Action MinReached;
+        public event Action MaxReached;
 
         public float Progress {
             get => (Value - m_MinValue)/(m_MaxValue - m_MinValue);
@@ -13,6 +17,11 @@ namespace CoreUtils.GameVariables {
 
         protected override void SetValue(float value) {
             base.SetValue(Mathf.Clamp(value, m_MinValue, m_MaxValue));
+            if (value.Approximately(m_MinValue)) {
+                MinReached?.Invoke();
+            } else if (value.Approximately(m_MaxValue)) {
+                MaxReached?.Invoke();
+            }
         }
 
         protected override void OnValidate() {
