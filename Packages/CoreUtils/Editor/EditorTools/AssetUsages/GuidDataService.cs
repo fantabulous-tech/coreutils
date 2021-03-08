@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using SQLite4Unity3d;
 using UnityEditor;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace CoreUtils.Editor.AssetUsages {
@@ -180,11 +181,8 @@ namespace CoreUtils.Editor.AssetUsages {
 
         private static void AddAssetDatabaseRefs(string refFile, Guid refGuid) {
             string[] files = AssetDatabase.GetDependencies(refFile, false);
-
-            foreach (string file in files) {
-                Guid guid = new Guid(AssetDatabase.AssetPathToGUID(file));
-                Connection.InsertOrReplace(new UsageEntry(refGuid, guid));
-            }
+            IEnumerable<UsageEntry> entries = files.Select(f => new UsageEntry(refGuid, new Guid(AssetDatabase.AssetPathToGUID(f))));
+            Connection.InsertAll(entries, "OR REPLACE");
         }
 
         private static void RemoveFileByPath(string path) {

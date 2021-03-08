@@ -88,7 +88,8 @@ namespace CoreUtils.AssetBuckets {
             HashSet<Object> newObjects = new HashSet<Object>(newPaths.Select(p => AssetDatabase.LoadAssetAtPath(p, bucket.AssetSearchType)).Where(o => o && bucket.EDITOR_CanAdd(o)).OrderBy(o => o.name));
 
             bucket.EDITOR_Clear();
-            newObjects.ForEach(bucket.EDITOR_TryAdd);
+            // newObjects.ForEach(bucket.EDITOR_TryAdd);
+            bucket.EDITOR_ForceAdd(newObjects);
             bucket.EDITOR_Sort(AssetGuidSorter);
             EditorUtility.SetDirty(bucket);
             SaveAssetsDelayed();
