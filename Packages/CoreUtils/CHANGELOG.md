@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- ## [Unreleased]
 -  -->
 
-## [1.0.7] - 2020-2-3
+## [1.0.8] - 2021-3-9
+
+### Updated
+- Updated project to Unity 2019.4.20f1
+
+### Fixed
+- Improved `AssetBucket` refresh speed
+- Improved `AssetUsages` scanning speed when objects have lots of references
+- Added error checks to `IsEqual<T>` extention
+- Added error checks to `UnityUtils.DestroyObject()`
+
+
+## [1.0.7] - 2021-2-3
 
 ### Fixed
 - Incorrect `StateMachine` initialization
@@ -17,13 +29,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added min/max events to `GameVariableFloatRange`
 - Added optional `TriggerEvent` to `TriggerSound` component
 
-## [1.0.6] - 2020-2-3
+
+## [1.0.6] - 2021-2-3
 
 ### Added
 - Added `[AutoFillFromScene]` property attribute to auto-fill an object reference from anywhere in the scene.
 
 
-## [1.0.5] - 2020-1-20
+## [1.0.5] - 2021-1-20
 
 ### Added
 - Added `GameVariableCamera` and `GameVariableTransform` GameVariable types
@@ -81,7 +94,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.7...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.8...HEAD
+[1.0.7]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.4...v1.0.5
