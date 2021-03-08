@@ -31,7 +31,11 @@ namespace CoreUtils {
             }
 
             if (Application.isPlaying) {
-                Object.Destroy(go, life);
+                if (life > 0) {
+                    Object.Destroy(go, life);
+                } else {
+                    Object.Destroy(go);
+                }
             } else {
                 Object.DestroyImmediate(go);
             }

@@ -252,9 +252,14 @@ namespace CoreUtils {
         }
 
         public static bool IsEqual<T>(this T[] a, T[] b) {
+            if (a == null || b == null) {
+                return a == null && b == null;
+            }
+
             if (a.Length != b.Length) {
                 return false;
             }
+
             for (int i = 0; i < a.Length; ++i) {
                 if (!a[i].Equals(b[i])) {
                     return false;
@@ -264,6 +269,10 @@ namespace CoreUtils {
         }
 
         public static bool IsEqual<T>(this T[] a, T[] b, Func<T, T, bool> isEqual) {
+            if (a == null || b == null) {
+                return a == null && b == null;
+            }
+
             if (a.Length != b.Length) {
                 return false;
             }
