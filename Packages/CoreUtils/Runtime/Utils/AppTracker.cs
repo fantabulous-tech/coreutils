@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 namespace CoreUtils {
+    [DefaultExecutionOrder(-24100)]
     public class AppTracker : Singleton<AppTracker> {
         /// <summary>
         ///     Event raised when the application is quitting.
@@ -22,7 +23,7 @@ namespace CoreUtils {
             get {
                 bool isPlaying = Application.isPlaying;
 #if UNITY_EDITOR
-                isPlaying |= UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode;
+                isPlaying &= UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode;
 #endif
                 return isPlaying;
             }

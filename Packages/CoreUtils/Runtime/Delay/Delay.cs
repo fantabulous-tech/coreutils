@@ -130,6 +130,10 @@ namespace CoreUtils {
         }
 
         public static void Add(DelaySequence sequence) {
+            if (!AppTracker.IsPlaying) {
+                return;
+            }
+
             Instance.DelaySequences.Insert(0, sequence);
             Instance.RaiseOnDelayEventsChanged();
         }

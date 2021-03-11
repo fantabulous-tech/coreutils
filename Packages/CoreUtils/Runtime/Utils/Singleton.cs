@@ -58,7 +58,11 @@ namespace CoreUtils {
         }
 
         public virtual void OnEnable() {
-            if (s_Instance == null) {
+            if (!AppTracker.IsPlaying) {
+                return;
+            }
+
+             if (s_Instance == null) {
                 s_Instance = (T) this;
             } else if (s_Instance != this) {
                 LogDuplicateSingleton(s_Instance, this);
