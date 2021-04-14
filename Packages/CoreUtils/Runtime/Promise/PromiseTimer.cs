@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace RSG {
-
     public class PromiseCancelledException : Exception {
         /// <summary>
         ///     Just create the exception
@@ -13,7 +12,7 @@ namespace RSG {
         ///     Create the exception with description
         /// </summary>
         /// <param name="message">Exception description</param>
-        public PromiseCancelledException(String message) : base(message) { }
+        public PromiseCancelledException(string message) : base(message) { }
     }
 
     /// <summary>
