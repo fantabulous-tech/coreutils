@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- ## [Unreleased]
 -  -->
 
+## [1.0.9] - 2021-4-14
+
+### Updated
+- Updated project to Unity 2019.4.23f1
+- Updated Promise library to latest
+- Separated Promise library to it's own folder
+
+
 ## [1.0.8] - 2021-3-9
 
 ### Updated
@@ -94,8 +102,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.8...HEAD
-[1.0.7]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.7...v1.0.8
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.9...HEAD
+[1.0.9]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.4...v1.0.5
