@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace CoreUtils.AssetBuckets {
-    [CreateAssetMenu(menuName = "Buckets/Prefab Bucket", order = 1)]
+    [CreateAssetMenu(menuName = "CoreUtils/Bucket/Prefab Bucket", order = (int) MenuOrder.Bucket)]
     public class PrefabBucket : GenericAssetBucket<GameObject> {
 
 #if UNITY_EDITOR

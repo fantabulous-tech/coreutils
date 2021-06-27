@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace CoreUtils.GameVariables {
-    [CreateAssetMenu(menuName = "GameVariable/FloatRange", order = (int) MenuOrder.VariableFloatRange)]
+    [CreateAssetMenu(menuName = "CoreUtils/GameVariable/FloatRange", order = (int) MenuOrder.VariableFloatRange)]
     public class GameVariableFloatRange : GameVariableFloat {
         [SerializeField] private float m_MinValue;
         [SerializeField] private float m_MaxValue = 1;

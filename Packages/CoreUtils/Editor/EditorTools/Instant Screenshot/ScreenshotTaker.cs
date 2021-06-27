@@ -20,7 +20,7 @@ namespace CoreUtils.Editor {
         private string m_LastScreenshot = "";
         private Vector2 m_Scroll;
 
-        [MenuItem("Tools/Instant High-Res Screenshot")]
+        [MenuItem("Tools/CoreUtils/Instant High-Res Screenshot Window", false, (int)MenuOrder.Window)]
         public static void ShowWindow() {
             ScreenshotTaker editorWindow = GetWindow<ScreenshotTaker>();
             editorWindow.autoRepaintOnSceneChange = true;

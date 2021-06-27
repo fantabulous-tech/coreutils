@@ -2,7 +2,7 @@ using System.IO;
 using UnityEngine;
 
 namespace CoreUtils.AssetBuckets {
-    [CreateAssetMenu(menuName = "Buckets/Generic Object Bucket", order = 1)]
+    [CreateAssetMenu(menuName = "CoreUtils/Bucket/Generic Object Bucket", order = (int) MenuOrder.Bucket)]
     public class ObjectBucket : GenericAssetBucket<Object> {
 
 #if UNITY_EDITOR

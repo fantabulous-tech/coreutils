@@ -58,12 +58,12 @@ namespace CoreUtils.Editor {
             }
         }
 
-        [MenuItem("GameObject/Sort Siblings", true)]
+        [MenuItem("Tools/CoreUtils/Sort Siblings", true, (int) MenuOrder.GameObject)]
         public static bool CanSortSiblings() {
             return Selection.transforms.Length > 0;
         }
 
-        [MenuItem("GameObject/Sort Siblings")]
+        [MenuItem("Tools/CoreUtils/Sort Siblings", false, (int) MenuOrder.GameObject)]
         public static void SortSiblings() {
             if (Selection.transforms.Length == 0) {
                 return;
@@ -80,12 +80,12 @@ namespace CoreUtils.Editor {
             return !parent ? GetRootSceneObjects().Select(go => go.transform) : parent.GetChildren();
         }
 
-        [MenuItem("GameObject/Group Selected %g", true)]
+        [MenuItem("Tools/CoreUtils/Group Selected %g", true, (int) MenuOrder.GameObject)]
         public static bool CanGroupSelected() {
             return Selection.gameObjects.Length > 0;
         }
 
-        [MenuItem("GameObject/Group Selected %g")]
+        [MenuItem("Tools/CoreUtils/Group Selected %g", false, (int) MenuOrder.GameObject)]
         public static void GroupSelected() {
             if (!Selection.activeTransform) {
                 return;
@@ -103,12 +103,12 @@ namespace CoreUtils.Editor {
             Selection.activeGameObject = go;
         }
 
-        [MenuItem("GameObject/Ungroup Selected %#g", true)]
+        [MenuItem("Tools/CoreUtils/Ungroup Selected %#g", true, (int) MenuOrder.GameObject)]
         public static bool CanUngroupSelected() {
             return Selection.transforms.Any();
         }
 
-        [MenuItem("GameObject/Ungroup Selected %#g")]
+        [MenuItem("Tools/CoreUtils/Ungroup Selected %#g", false, (int) MenuOrder.GameObject)]
         public static void UngroupSelected() {
             if (!Selection.transforms.Any()) {
                 return;
@@ -149,12 +149,12 @@ namespace CoreUtils.Editor {
         public static event ApplyHandler OnApply;
         public static event ApplyHandler OnApplied;
 
-        [MenuItem("GameObject/Apply Selected %#a", true)]
+        [MenuItem("Tools/CoreUtils/Apply Selected %#a", true, (int) MenuOrder.GameObject)]
         public static bool CanApplySelected() {
             return Selection.gameObjects.Any(IsInstance);
         }
 
-        [MenuItem("GameObject/Apply Selected %#a")]
+        [MenuItem("Tools/CoreUtils/Apply Selected %#a", false, (int) MenuOrder.GameObject)]
         public static void ApplySelected() {
             List<string> appliedList = new List<string>();
             foreach (
@@ -184,12 +184,12 @@ namespace CoreUtils.Editor {
             Debug.Log("Applied changes to " + appliedList.Count + " prefabs.\n" + appliedList.AggregateToString("\n"));
         }
 
-        [MenuItem("GameObject/Really Break Prefab Instance", true)]
+        [MenuItem("Tools/CoreUtils/Really Break Prefab Instance", true, (int) MenuOrder.GameObject)]
         public static bool CanReallyBreakPrefab() {
             return Selection.gameObjects.Select(PrefabUtility.GetCorrespondingObjectFromSource).Any(p => p);
         }
 
-        [MenuItem("GameObject/Really Break Prefab Instance")]
+        [MenuItem("Tools/CoreUtils/Really Break Prefab Instance", false, (int) MenuOrder.GameObject)]
         public static void ReallyBreakPrefab() {
             Selection.gameObjects.ForEach(BreakPrefab);
         }
@@ -218,32 +218,32 @@ namespace CoreUtils.Editor {
             Debug.Log(string.Format("We broke {0} for realsies.", go.name), go);
         }
 
-        [MenuItem("GameObject/Zero Selected %#z", true)]
+        [MenuItem("Tools/CoreUtils/Zero Selected %#z", true, (int) MenuOrder.GameObject)]
         public static bool CanZeroSelected() {
             return Selection.gameObjects.Any();
         }
 
-        [MenuItem("GameObject/Zero Selected %#z")]
+        [MenuItem("Tools/CoreUtils/Zero Selected %#z", false, (int) MenuOrder.GameObject)]
         public static void ZeroSelected() {
             Selection.transforms.ForEach(Zero);
         }
 
-        [MenuItem("GameObject/Zero Selected To Children Center", true)]
+        [MenuItem("Tools/CoreUtils/Zero Selected To Children Center", true, (int) MenuOrder.GameObject)]
         public static bool CanZeroSelectedToCenter() {
             return Selection.gameObjects.Any();
         }
 
-        [MenuItem("GameObject/Zero Selected To Children Center")]
+        [MenuItem("Tools/CoreUtils/Zero Selected To Children Center", false, (int) MenuOrder.GameObject)]
         public static void ZeroSelectedToCenter() {
             Selection.transforms.ForEach(ZeroToCenter);
         }
 
-        [MenuItem("GameObject/Revert Selected", true)]
+        [MenuItem("Tools/CoreUtils/Revert Selected", true, (int) MenuOrder.GameObject)]
         public static bool CanRevertSelected() {
             return Selection.gameObjects.Any(IsInstance);
         }
 
-        [MenuItem("GameObject/Revert Selected")]
+        [MenuItem("Tools/CoreUtils/Revert Selected", false, (int) MenuOrder.GameObject)]
         public static void RevertSelected() {
             foreach (GameObject instance in Selection.gameObjects) {
                 Undo.RegisterCompleteObjectUndo(instance, "Revert Selected");
@@ -258,12 +258,12 @@ namespace CoreUtils.Editor {
             AssetDatabase.SaveAssets();
         }
 
-        [MenuItem("GameObject/Select Source Prefab", true)]
+        [MenuItem("Tools/CoreUtils/Select Source Prefab", true, (int) MenuOrder.GameObject)]
         public static bool CanSelectSourcePrefab() {
             return Selection.gameObjects.Any(IsInstance);
         }
 
-        [MenuItem("GameObject/Select Source Prefab")]
+        [MenuItem("Tools/CoreUtils/Select Source Prefab", false, (int) MenuOrder.GameObject)]
         public static bool SelectSourcePrefab() {
             Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(Selection.activeGameObject);
             Selection.activeObject = prefab;
@@ -303,7 +303,7 @@ namespace CoreUtils.Editor {
             return GetRootSceneObjects().Select(go => go.transform);
         }
 
-        [MenuItem("File/Save Project Shortcut %&#s")]
+        [MenuItem("Tools/CoreUtils/Save Project Shortcut %&#s", priority = (int)MenuOrder.Command)]
         public static void SaveProject() {
             AssetDatabase.SaveAssets();
             Debug.Log("Project saved.");

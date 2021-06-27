@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace CoreUtils.Editor.AssetDragnet {
-    [CreateAssetMenu(menuName = "AssetDragnet/UnityDragnetConfig")]
+    [CreateAssetMenu(menuName = "CoreUtils/AssetDragnet/UnityDragnetConfig", order = (int) MenuOrder.Config)]
     public class UnityDragnetConfig : BaseDragnetConfig {
         public string AssetFilter = "t:Prefab";
 

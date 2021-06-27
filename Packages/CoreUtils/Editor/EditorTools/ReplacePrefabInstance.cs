@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CoreUtils.Editor {
     public static class ReplacePrefabInstance {
-        [MenuItem("Tools/Replace Prefab Instance", validate = true)]
+        [MenuItem("Tools/CoreUtils/Replace Prefab Instance", true, (int) MenuOrder.GameObject)]
         public static bool ValidateReplacePrefabInstanceMenuItem() {
             if (Selection.objects.Length == Selection.gameObjects.Length) {
                 GameObject prefab = GetPrefabOnly(Selection.gameObjects);
@@ -18,7 +18,7 @@ namespace CoreUtils.Editor {
             return false;
         }
 
-        [MenuItem("Tools/Replace Prefab Instance %&r")]
+        [MenuItem("Tools/CoreUtils/Replace Prefab Instance %&r", false, (int) MenuOrder.GameObject)]
         public static void ReplacePrefabInstanceMenuItem() {
             if (Selection.objects.Length == Selection.gameObjects.Length) {
                 GameObject prefab = GetPrefabOnly(Selection.gameObjects);

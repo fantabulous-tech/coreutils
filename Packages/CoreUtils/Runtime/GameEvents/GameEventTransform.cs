@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
 namespace CoreUtils.GameEvents {
-    [CreateAssetMenu(menuName = "GameEvent/Transform", order = (int) MenuOrder.EventTransform)]
+    [CreateAssetMenu(menuName = "CoreUtils/GameEvent/Transform", order = (int) MenuOrder.EventObject)]
     public class GameEventTransform : BaseGameEvent<GameEventTransform, Transform> { }
 }

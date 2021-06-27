@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace CoreUtils.GameVariables {
-    [CreateAssetMenu(menuName = "GameVariable/Float", order = (int) MenuOrder.VariableFloat)]
+    [CreateAssetMenu(menuName = "CoreUtils/GameVariable/Float", order = (int) MenuOrder.VariableFloat)]
     public class GameVariableFloat : BaseGameVariable<GameVariableFloat, float> {
         protected override float Parse(string stringValue) {
             return float.Parse(stringValue);

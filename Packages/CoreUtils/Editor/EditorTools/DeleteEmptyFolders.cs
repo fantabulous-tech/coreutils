@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CoreUtils.Editor {
     public static class DeleteEmptyFolders {
-        [MenuItem("Tools/Delete Empty Folders")]
+        [MenuItem("Tools/CoreUtils/Delete Empty Folders", priority = (int)MenuOrder.Command)]
         public static void Go() {
             string[] directories = Directory.GetDirectories("Assets", "*.*", SearchOption.AllDirectories);
 

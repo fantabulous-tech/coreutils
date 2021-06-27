@@ -22,7 +22,7 @@ namespace CoreUtils.Editor {
         }
         private static FindMissingScriptsWindow s_Instance;
 
-        [MenuItem("Window/Find Missing Scripts")]
+        [MenuItem("Tools/CoreUtils/Find Missing Scripts Window", false, (int)MenuOrder.Window)]
         public static void OpenWindow() {
             Instance.Show();
         }

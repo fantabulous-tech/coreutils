@@ -13,7 +13,7 @@ namespace CoreUtils.Editor.AssetUsages {
 
         public static AssetUsageWindow Instance => UnityUtils.GetOrSet(ref s_Instance, () => GetWindow<AssetUsageWindow>(kWindowName));
 
-        [MenuItem("Assets/Find All Uses in Project", false, 5000)]
+        [MenuItem("Assets/Find All Uses in Project", false, (int) MenuOrder.Usages)]
         private static void Open() {
             Instance.Show();
             Instance.m_SelectedObjects = Selection.objects;
@@ -29,7 +29,7 @@ namespace CoreUtils.Editor.AssetUsages {
             SelectionChanged(m_SelectedObjects, true);
         }
 
-        [MenuItem("Window/Asset Usages")]
+        [MenuItem("Tools/CoreUtils/Asset Usages Window", false, (int)MenuOrder.Window)]
         public static void OpenWindow() {
             Instance.Show();
         }

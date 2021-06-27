@@ -33,7 +33,7 @@ namespace CoreUtils.Editor {
         private static readonly string s_KeyObjectGUIDFormat = ProjectKeyPrefix + kPrefsKeyBookMarkObjectGUIDFormat;
         private static readonly string s_KeyObjectScenePathFormat = ProjectKeyPrefix + kPrefsKeyBookMarkObjectScenePathFormat;
 
-        [MenuItem("Window/Object Bookmarks")]
+        [MenuItem("Tools/CoreUtils/Object Bookmarks Window", false, (int)MenuOrder.Window)]
         public static void OpenWindow() {
             ObjectBookmarkWindow window = (ObjectBookmarkWindow) GetWindow(typeof(ObjectBookmarkWindow), false, "Bookmarks");
             window.Show();

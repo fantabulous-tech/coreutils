@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace CoreUtils.Editor.AssetDragnet {
-    [CreateAssetMenu(menuName = "AssetDragnet/ExternalDragnetConfig")]
+    [CreateAssetMenu(menuName = "CoreUtils/AssetDragnet/ExternalDragnetConfig", order = (int) MenuOrder.Config)]
     public class ExternalDragnetConfig : BaseDragnetConfig {
         [SerializeField] private string m_RootFolder;
 

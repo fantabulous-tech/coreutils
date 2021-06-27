@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
 namespace CoreUtils.GameEvents {
-    [CreateAssetMenu(menuName = "GameEvent/GameObject", order = (int) MenuOrder.EventGameObject)]
+    [CreateAssetMenu(menuName = "CoreUtils/GameEvent/GameObject", order = (int) MenuOrder.EventObject)]
     public class GameEventGameObject : BaseGameEvent<GameEventGameObject, GameObject> { }
 }

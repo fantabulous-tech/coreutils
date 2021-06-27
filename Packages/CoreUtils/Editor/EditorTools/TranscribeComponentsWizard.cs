@@ -14,7 +14,7 @@ namespace CoreUtils.Editor {
         private Vector2 m_Scroll;
         private static bool s_CreateMissingObjects;
 
-        [MenuItem("Tools/Transcribe Components")]
+        [MenuItem("Tools/CoreUtils/Transcribe Components Window", false, (int)MenuOrder.Window)]
         private static void CreateTranscribeComponentsWizard() {
             DisplayWizard<TranscribeComponentsWizard>("Transcribe Components", "Transcribe");
         }

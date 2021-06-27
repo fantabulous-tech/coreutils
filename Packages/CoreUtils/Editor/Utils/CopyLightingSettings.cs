@@ -32,7 +32,7 @@ namespace CoreUtils.Editor {
     const string k_PasteSettingsMenuPath = "Window/Lighting/Paste Settings";
 #endif
 
-        [MenuItem(k_CopySettingsMenuPath, priority = 200)]
+        [MenuItem(k_CopySettingsMenuPath, priority = (int) MenuOrder.LightingSettings)]
         private static void CopySettings() {
             Object lightmapSettings;
             if (!TryGetSettings(typeof(LightmapEditorSettings), "GetLightmapSettings", out lightmapSettings)) {
@@ -48,7 +48,7 @@ namespace CoreUtils.Editor {
             s_SourceRenderSettings = new SerializedObject(renderSettings);
         }
 
-        [MenuItem(k_PasteSettingsMenuPath, priority = 201)]
+        [MenuItem(k_PasteSettingsMenuPath, priority = (int) MenuOrder.LightingSettings)]
         private static void PasteSettings() {
             Object lightmapSettings;
             if (!TryGetSettings(typeof(LightmapEditorSettings), "GetLightmapSettings", out lightmapSettings)) {
@@ -66,7 +66,7 @@ namespace CoreUtils.Editor {
             InternalEditorUtility.RepaintAllViews();
         }
 
-        [MenuItem(k_PasteSettingsMenuPath, validate = true)]
+        [MenuItem(k_PasteSettingsMenuPath, validate = true, priority = (int) MenuOrder.LightingSettings)]
         private static bool PasteValidate() {
             return s_SourceLightmapSettings != null && s_SourceRenderSettings != null;
         }

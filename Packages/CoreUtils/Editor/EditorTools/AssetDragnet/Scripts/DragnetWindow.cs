@@ -58,7 +58,7 @@ namespace CoreUtils.Editor.AssetDragnet {
             Repaint();
         }
 
-        [MenuItem("Window/Asset Dragnet")]
+        [MenuItem("Tools/CoreUtils/Asset Dragnet Window", false, (int)MenuOrder.Window)]
         private static void Init() {
             Init(null);
         }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
 namespace CoreUtils.AssetBuckets {
-    [CreateAssetMenu(menuName = "Buckets/Audio Bucket", order = 1)]
+    [CreateAssetMenu(menuName = "CoreUtils/Bucket/Audio Bucket", order = (int) MenuOrder.Bucket)]
     public class AudioBucket : GenericAssetBucket<AudioClip> { }
 }

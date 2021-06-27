@@ -1,6 +1,6 @@
 using UnityEngine;
 
 namespace CoreUtils.AssetBuckets {
-    [CreateAssetMenu(fileName = "Buckets", menuName = "Buckets/Bucket of Buckets", order = 1)]
+    [CreateAssetMenu(fileName = "Buckets", menuName = "CoreUtils/Bucket/Bucket of Buckets", order = (int) MenuOrder.Bucket)]
     public class BucketBucket : GenericAssetBucket<BaseBucket> { }
 }
