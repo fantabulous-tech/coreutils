@@ -1,20 +1,33 @@
+using System;
 using CoreUtils.GameEvents;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace CoreUtils.UI {
     public class ButtonBinding : MonoBehaviour {
-        [SerializeField] private BaseGameEvent m_GameEvent;
-        [SerializeField] private Button m_Button;
-        [SerializeField] private TextMeshProUGUI m_Label;
-        [SerializeField] private bool OverrideName;
+        [SerializeField, AutoFillAsset(CanBeNull = true)] private BaseGameEvent m_GameEvent;
+        [SerializeField, AutoFill] private Button m_Button;
+        [SerializeField, AutoFillFromChildren] private TextMeshProUGUI m_Label;
+        [FormerlySerializedAs("OverrideName"),SerializeField] private bool m_OverrideName;
 
-        private bool m_LastValue;
+        public object Data { get; set; }
+        
+        public string Text {
+            get => m_Label.text;
+            set {
+                if (m_Label) {
+                    m_Label.text = value;
+                }
+            }
+        }
+
+        public event Action<ButtonBinding> Clicked; 
 
         private void Start() {
             m_Button.onClick.AddListener(OnClick);
-            if (m_Label && m_GameEvent && !OverrideName) {
+            if (m_Label && m_GameEvent && !m_OverrideName) {
                 m_Label.text = m_GameEvent.Name;
             }
         }
@@ -23,6 +36,8 @@ namespace CoreUtils.UI {
             if (m_GameEvent != null) {
                 m_GameEvent.Raise();
             }
+
+            Clicked?.Invoke(this);
         }
 
         private void Reset() {
@@ -31,7 +46,7 @@ namespace CoreUtils.UI {
         }
 
         private void OnValidate() {
-            if (m_Label && m_GameEvent && !OverrideName) {
+            if (m_Label && m_GameEvent && !m_OverrideName) {
                 m_Label.text = m_GameEvent.Name;
             }
         }
