@@ -29,6 +29,10 @@ namespace CoreUtils.Editor.AssetUsages {
 
         [InitializeOnLoadMethod]
         public static void AutoInit() {
+            if (Application.isPlaying) {
+                return;
+            }
+
             EditorApplication.delayCall += Init;
         }
 

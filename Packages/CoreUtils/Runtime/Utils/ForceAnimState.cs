@@ -12,6 +12,6 @@ namespace CoreUtils {
             }
         }
 
-        private bool CanForceAnim => m_Animation;
+        private bool CanForceAnim => m_Animation && enabled;
     }
 }
