@@ -85,6 +85,10 @@ namespace CoreUtils {
             return children;
         }
 
+        public static string GetPath(this Transform current) {
+            return current.parent == null ? current.name : $"{current.parent.GetPath()}/{current.name}";
+        }
+
         public static void ResetTransform(this Transform t) {
             if (t == null) {
                 return;

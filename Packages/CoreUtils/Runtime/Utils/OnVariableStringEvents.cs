@@ -2,7 +2,7 @@ using CoreUtils.GameVariables;
 using UnityEngine;
 
 namespace CoreUtils {
-    public class OnStringVariableEvents : MonoBehaviour {
+    public class OnVariableStringEvents : MonoBehaviour {
         [SerializeField, AutoFillAsset] private GameVariableString m_StringVariable;
 
         public UnityEventString OnEvent;

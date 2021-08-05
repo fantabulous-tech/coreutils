@@ -4,6 +4,7 @@ namespace CoreUtils {
     public class DistributeChildren : MonoBehaviour {
         [SerializeField] private float m_Distance = 0.5f;
         [SerializeField] private Vector3 m_Axis = Vector3.right;
+        [SerializeField] private bool m_UpdateInEditor;
 
         private int m_LastCount;
         private float m_LastDistance;
@@ -30,6 +31,12 @@ namespace CoreUtils {
                 Transform child = transform.GetChild(i);
                 Vector3 axis = m_Axis.normalized;
                 child.localPosition = m_Distance*i*axis - axis*halfDistance;
+            }
+        }
+
+        private void OnValidate() {
+            if (m_UpdateInEditor) {
+                Distribute();
             }
         }
     }

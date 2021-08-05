@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 namespace CoreUtils.UI {
     public class SliderBinding : MonoBehaviour {
-        [SerializeField] private GameVariableFloatRange m_Variable;
-        [SerializeField] private Slider m_Control;
-        [SerializeField] private TextMeshProUGUI m_Label;
+        [SerializeField, AutoFillAsset] private GameVariableFloatRange m_Variable;
+        [SerializeField, AutoFill] private Slider m_Control;
+        [SerializeField, AutoFillFromChildren] private TextMeshProUGUI m_Label;
 
         private float m_LastValue;
 

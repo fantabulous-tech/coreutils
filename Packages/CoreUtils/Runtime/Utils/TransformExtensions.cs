@@ -19,10 +19,16 @@ namespace CoreUtils {
             for (int i = 0; i < 4; ++i) {
                 sum += q[i]*q[i];
             }
+
             float magnitudeInverse = 1/Mathf.Sqrt(sum);
             for (int i = 0; i < 4; ++i) {
                 q[i] *= magnitudeInverse;
             }
+        }
+
+        public static void SetGlobalScale(this Transform transform, Vector3 globalScale) {
+            transform.localScale = Vector3.one;
+            transform.localScale = new Vector3(globalScale.x/transform.lossyScale.x, globalScale.y/transform.lossyScale.y, globalScale.z/transform.lossyScale.z);
         }
     }
 }

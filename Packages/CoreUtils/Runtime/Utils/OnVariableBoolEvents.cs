@@ -3,11 +3,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CoreUtils {
-    public class OnBoolEvents : MonoBehaviour {
+    public class OnVariableBoolEvents : MonoBehaviour {
         [SerializeField] private GameVariableBool m_Bool;
 
         public UnityEvent OnTrue;
         public UnityEvent OnFalse;
+        public UnityEventBool OnVariableChanged;
 
         private void Awake() {
             if (m_Bool == null) {
@@ -30,6 +31,8 @@ namespace CoreUtils {
             } else {
                 OnFalse.Invoke();
             }
+
+            OnVariableChanged.Invoke(value);
         }
     }
 }

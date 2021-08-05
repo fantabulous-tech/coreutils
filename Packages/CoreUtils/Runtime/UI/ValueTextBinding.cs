@@ -1,11 +1,10 @@
 ﻿using CoreUtils.GameVariables;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CoreUtils.UI {
     public class ValueTextBinding : MonoBehaviour {
-        [FormerlySerializedAs("m_RangeVariable"),SerializeField, AutoFillAsset] private BaseGameVariable m_Variable;
+        [SerializeField, AutoFillAsset] private BaseGameVariable m_Variable;
         [SerializeField, AutoFill] private TextMeshProUGUI m_Label;
         [SerializeField] private string m_OptionalStringFormat;
 

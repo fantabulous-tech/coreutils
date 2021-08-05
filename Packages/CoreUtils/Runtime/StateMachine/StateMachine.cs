@@ -40,7 +40,19 @@ namespace CoreUtils {
         public event Action OnLastStateEntered;
         public event Action OnLastStateExited;
 
+        private bool m_Init;
+
         public void Awake() {
+            CheckInit();
+        }
+
+        private void CheckInit() {
+            if (m_Init) {
+                return;
+            }
+
+            m_Init = true;
+
             // Initialize state visibility.
             foreach (Transform item in transform) {
                 item.gameObject.SetActive(m_DefaultState == item.gameObject);
@@ -56,6 +68,8 @@ namespace CoreUtils {
         }
 
         public void Next() {
+            CheckInit();
+
             if (CurrentState == null) {
                 ChangeState(0);
                 return;
@@ -67,6 +81,8 @@ namespace CoreUtils {
         }
 
         public void Previous() {
+            CheckInit();
+
             if (CurrentState == null) {
                 ChangeState(0);
                 return;
@@ -79,6 +95,8 @@ namespace CoreUtils {
         }
 
         public void Exit() {
+            CheckInit();
+
             if (CurrentState == null) {
                 return;
             }
@@ -109,6 +127,8 @@ namespace CoreUtils {
         }
 
         public void ChangeState(int childIndex) {
+            CheckInit();
+
             if (childIndex > transform.childCount - 1) {
                 LogWarning($"Index is greater than the amount of states in the StateMachine \"{gameObject.name}\" please verify the index you are trying to change to.");
                 return;
@@ -122,6 +142,8 @@ namespace CoreUtils {
         }
 
         public void ChangeState(GameObject state) {
+            CheckInit();
+
             if (state == null) {
                 Exit();
                 return;
@@ -151,6 +173,8 @@ namespace CoreUtils {
         }
 
         public void ChangeState(string state) {
+            CheckInit();
+
             if (state.IsNullOrEmpty()) {
                 Exit();
                 return;

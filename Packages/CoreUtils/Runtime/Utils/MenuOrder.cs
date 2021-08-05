@@ -13,7 +13,7 @@
         Config,
         EventObject,
         VariableObject,
-        EditorScript = 82,
+        EditorScript = 81,
         LightingSettings = 200,
         GameObject = 2000,
         Window = 3000,

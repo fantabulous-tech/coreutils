@@ -2,15 +2,12 @@
 using UnityEngine;
 
 namespace CoreUtils {
-    public class OnGameVariableSetActive : MonoBehaviour {
+    public class OnGameVariableSetEnabled : MonoBehaviour {
         [SerializeField, AutoFillAsset] private GameVariableBool m_ToggleVariable;
-        [SerializeField, AutoFill] private GameObject m_Target;
+        [SerializeField] private Behaviour m_Component;
+        [SerializeField] private bool m_Invert;
 
         private void Awake() {
-            if (m_Target == null) {
-                m_Target = gameObject;
-            }
-
             if (m_ToggleVariable != null) {
                 m_ToggleVariable.Changed += OnChange;
                 OnChange(m_ToggleVariable.Value);
@@ -24,7 +21,7 @@ namespace CoreUtils {
         }
 
         private void OnChange(bool value) {
-            m_Target.SetActive(value);
+            m_Component.enabled = m_Invert ? !value : value;
         }
     }
 }

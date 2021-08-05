@@ -39,6 +39,7 @@ namespace CoreUtils {
                     GUI.color = currentState == null ? Color.green : Colors.LightRed;
                     if (GUILayout.Button($"{i}. Exit", GUILayout.Width(buttonWidth))) {
                         Target.Exit();
+                        EditorUtility.SetDirty(Target);
                     }
                 } else {
                     GameObject current = Target.transform.GetChild(i).gameObject;
@@ -46,6 +47,7 @@ namespace CoreUtils {
 
                     if (GUILayout.Button($"{i}. {current.name}", GUILayout.Width(buttonWidth))) {
                         Target.ChangeState(current);
+                        EditorUtility.SetDirty(Target);
                     }
                 }
 

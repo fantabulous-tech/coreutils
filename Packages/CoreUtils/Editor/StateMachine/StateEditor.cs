@@ -18,6 +18,7 @@ namespace CoreUtils {
             GUI.enabled = Target.StateMachine.CurrentState != Target.gameObject;
             if (GUILayout.Button("Select")) {
                 Target.ChangeState(Target.gameObject);
+                EditorUtility.SetDirty(Target);
             }
 
             GUI.enabled = Target.StateMachine.CurrentState != null;
@@ -25,6 +26,7 @@ namespace CoreUtils {
             if (GUILayout.Button("Exit")) {
                 Undo.RegisterCompleteObjectUndo(Target.transform.parent.transform, "Exit");
                 Target.Exit();
+                EditorUtility.SetDirty(Target);
             }
 
             GUILayout.EndHorizontal();
