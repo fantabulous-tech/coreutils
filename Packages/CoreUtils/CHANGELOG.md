@@ -4,8 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<!-- ## [Unreleased]
--  -->
+## [Unreleased]
+
+## [1.0.11] - 2021-8-16
+
+### Added
+- `SceneBucket` - Auto-collects scenes in a folder and adds them to the BuildSettings
+- `SaveLoadVariables` - Subscribes to variables in a `GameVariableBucket` and saves their values to the PlayerPrefs when changed and loads them on start.
+- `OptionStackBool` - Collects a list of changes to a boolean, implementing the last one added.
+- `DropDownBinding` - Binds a `GameVariable` to a drop-down.
+- `DistributeChildrenInGrid` - Auto-distributes child transforms in a horizontal grid.
+- `OnGameVariableSetEnabled` - Set the `enabled` property on a component based on a `GameVariableBool` state.
+- `UnityEventInt` - Additional concrete `UnityEvent<T>` type.
+
+### Updated
+- Improved GameVariable and AssetBucket `AutoFill` options
 
 ## [1.0.10] - 2021-6-28
 
@@ -107,7 +120,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.10...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.11...HEAD
+[1.0.11]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.7...v1.0.8
