@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace CoreUtils {
     public class OnGameVariableToggle : MonoBehaviour {
-        [SerializeField] private GameVariableBool m_ToggleVariable;
+        [SerializeField, AutoFillAsset] private GameVariableBool m_ToggleVariable;
 
         public UnityEvent OnTrue;
         public UnityEvent OnFalse;

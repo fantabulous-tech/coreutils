@@ -168,7 +168,7 @@ namespace CoreUtils {
                 if (sb.Length != 0) {
                     sb.Append(" ");
                 }
-                sb.Append(testArray[i]);
+                sb.Append(testArray[i].Trim());
             }
             return sb.ToString();
         }

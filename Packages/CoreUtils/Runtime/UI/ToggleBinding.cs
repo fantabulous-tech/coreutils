@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 namespace CoreUtils.UI {
     public class ToggleBinding : MonoBehaviour {
-        [SerializeField] private GameVariableBool m_Variable;
-        [SerializeField] private Toggle m_Control;
-        [SerializeField] private TextMeshProUGUI m_Label;
+        [SerializeField, AutoFillAsset] private GameVariableBool m_Variable;
+        [SerializeField, AutoFillFromChildren] private Toggle m_Control;
+        [SerializeField, AutoFillFromChildren] private TextMeshProUGUI m_Label;
 
         private bool m_LastValue;
 
