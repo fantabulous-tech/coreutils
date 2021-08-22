@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.12] - 2021-8-22
+
+### Updated
+- Expanded `SaveLoadVariables` to support external access
+
 ## [1.0.11] - 2021-8-16
 
 ### Added
@@ -120,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.11...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...HEAD
+[1.0.12]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.10...v1.0.12
 [1.0.11]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.8...v1.0.9
