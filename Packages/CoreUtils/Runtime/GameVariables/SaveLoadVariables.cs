@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CoreUtils.GameVariables {
     [DefaultExecutionOrder(-1500)]
-    public class SaveLoadVariables : MonoBehaviour {
+    public class SaveLoadVariables : Singleton<SaveLoadVariables> {
         [SerializeField, AutoFillAsset] private GameVariableBucket m_GameVariablesToSave;
         [SerializeField, AutoFillAsset(CanBeNull = true)] private GameEvent m_ResetProgressEvent;
 
@@ -28,12 +28,12 @@ namespace CoreUtils.GameVariables {
             LoadAll();
         }
 
-        private void LoadAll() {
-            m_GameVariablesToSave.Items.ForEach(Load);
+        public static void LoadAll() {
+            Instance.m_GameVariablesToSave.Items.ForEach(Load);
         }
 
-        private void SubscribeAll() {
-            m_GameVariablesToSave.Items.ForEach(Subscribe);
+        public static void SubscribeAll() {
+            Instance.m_GameVariablesToSave.Items.ForEach(Subscribe);
         }
 
         private static void Load(BaseGameVariable variable) {
