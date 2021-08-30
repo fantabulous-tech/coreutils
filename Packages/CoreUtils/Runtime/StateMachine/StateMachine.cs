@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace CoreUtils {
@@ -180,13 +181,17 @@ namespace CoreUtils {
                 return;
             }
 
-            Transform found = transform.Find(state);
+            Transform found = FindTransform(state);
 
             if (found) {
                 ChangeState(found.gameObject);
             } else {
                 LogWarning($"\"{name}\" does not contain a state by the name of \"{state}\" please verify the name of the state you are trying to reach.");
             }
+        }
+
+        private Transform FindTransform(string stateName) {
+            return transform.Cast<Transform>().FirstOrDefault(t => t.name.Equals(stateName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void Enter(GameObject state) {
