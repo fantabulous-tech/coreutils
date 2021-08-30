@@ -5,12 +5,12 @@ Structural systems and tools that make using Unity easier and more productive.
 ## Installation
 
 ### Option #1: OpenUPM
+You can install CoreUtils using the [OpenUPM CoreUtils Package](https://openupm.com/packages/tech.fantabulous.coreutils/). You can either:
 
 Use the OpenUPM command line interface:
 - `openupm add tech.fantabulous.coreutils`
 
-Add in Project Settings:
-
+Or manually add it in via Project Settings:
 - Go to `Edit > Project Settings > Package manager`
 - Click the `+` button in the registry list
 - Name it `OpenUPM`
