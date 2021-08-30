@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2021-8-31
+
+### Fixed
+- Fixed broken namespace when creating C# Editor from a script with parens on a separate line
+
 ## [1.0.13] - 2021-8-31
 
 ### Updated
@@ -130,7 +135,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.13...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.14...HEAD
+[1.0.14]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...v1.0.14
+[1.0.13]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...v1.0.13
 [1.0.13]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.10...v1.0.11
