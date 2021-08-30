@@ -35,7 +35,7 @@ namespace CoreUtils.Editor {
             string namespaceLine = null;
             while (textLine != null) {
                 if (textLine.Contains("namespace")) {
-                    namespaceLine = textLine;
+                    namespaceLine = textLine.Trim();
                     break;
                 }
 
@@ -46,6 +46,12 @@ namespace CoreUtils.Editor {
 
             if (namespaceLine == null) {
                 namespaceLine = "namespace CoreUtils.Editor {";
+            }
+
+            // Handle namespaces with parens on separate line
+            if (!namespaceLine.Contains("{"))
+            {
+                namespaceLine = namespaceLine + "\n{";
             }
 
             // Write editor script
