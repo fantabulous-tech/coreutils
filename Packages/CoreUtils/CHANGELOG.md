@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.15] - 2021-9-10
+
+### Fixed
+- Fixed overly verbose 'Cancel' logging in Delay system
+
 ## [1.0.14] - 2021-8-31
 
 ### Fixed
@@ -135,8 +140,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.14...HEAD
-[1.0.14]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...v1.0.14
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.15...HEAD
+[1.0.15]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.14...v1.0.15
+[1.0.14]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...v1.0.13
 [1.0.13]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.11...v1.0.12
