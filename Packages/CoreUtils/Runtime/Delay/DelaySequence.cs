@@ -131,7 +131,7 @@ namespace CoreUtils {
             }
 
             string summary = "Cancelled '" + (Name.IsNullOrEmpty() && context ? context.name : Name) + "' delay sequence because: " + reason;
-            Debug.Log(summary, context);
+            // Debug.Log(summary, context);
             Reject(new PromiseException(summary));
         }
 
