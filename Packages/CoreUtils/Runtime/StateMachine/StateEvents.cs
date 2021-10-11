@@ -20,6 +20,7 @@ namespace CoreUtils {
                 return;
             }
 
+            m_Init = true;
             m_State.OnEntered += RaiseOnStateEntered;
             m_State.OnExited += RaiseOnStateExited;
         }

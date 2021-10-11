@@ -162,7 +162,7 @@ namespace CoreUtils.AssetBuckets {
             private readonly Type m_Type;
             private readonly int m_Index;
             private readonly string m_Name;
-            private float m_ObjectFieldWidth;
+            // private float m_ObjectFieldWidth;
 
             public string Name => !m_Name.IsNullOrEmpty() ? m_Name : m_Item ? m_Item.name : $"None ({m_Type.Name})";
             public string DisplayPath { get; }

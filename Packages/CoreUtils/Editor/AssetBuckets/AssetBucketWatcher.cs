@@ -34,7 +34,7 @@ namespace CoreUtils.AssetBuckets {
             AssetImportTracker.DelayedAssetsChanged += OnDatabaseChanged;
         }
 
-        private static HashSet<string> s_ChangedDirectories;
+        // private static HashSet<string> s_ChangedDirectories;
 
         private static void OnDatabaseChanged(AssetChanges changes) {
             HashSet<string> changedDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

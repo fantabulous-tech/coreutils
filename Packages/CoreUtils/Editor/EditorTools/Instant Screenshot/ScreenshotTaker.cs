@@ -13,9 +13,9 @@ namespace CoreUtils.Editor {
         private int m_ResHeight = Screen.height*4;
         private int m_Scale = 1;
         private string m_Path = "";
-        private RenderTexture m_RenderTexture;
+        // private RenderTexture m_RenderTexture;
         private bool m_IsTransparent;
-        private float m_LastTime;
+        // private float m_LastTime;
         private bool m_TakeHiResShot;
         private string m_LastScreenshot = "";
         private Vector2 m_Scroll;
