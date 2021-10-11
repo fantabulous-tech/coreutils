@@ -18,6 +18,9 @@ namespace CoreUtils {
         [SerializeField, Tooltip("Stops the currently playing clip in the audioSource. Otherwise clips will overlap/mix.")]
         private bool m_StopOnPlay;
 
+        [SerializeField, Tooltip("Start a wave file playing on awake.")]
+        private bool m_PlayOnAwake;
+
         [SerializeField, Tooltip("Start a wave file playing on awake, but after a delay.")]
         private bool m_PlayOnAwakeWithDelay;
 
@@ -58,17 +61,17 @@ namespace CoreUtils {
             }
 
             // audio source play on awake is true, just play the PlaySound immediately
-            if (m_AudioSource.playOnAwake) {
+            if (m_PlayOnAwake) {
                 PlaySound();
             }
 
             // if playOnAwake is false, but the playOnAwakeWithDelay on the PlaySound is true, play the sound on away but with a delay
-            else if (!m_AudioSource.playOnAwake && m_PlayOnAwakeWithDelay) {
+            else if (!m_PlayOnAwake && m_PlayOnAwakeWithDelay) {
                 PlayWithDelay(m_DelayOffsetTime);
             }
 
             // in the case where both playOnAwake and playOnAwakeWithDelay are both set to true, just to the same as above, play the sound but with a delay
-            else if (m_AudioSource.playOnAwake && m_PlayOnAwakeWithDelay) {
+            else if (m_PlayOnAwake && m_PlayOnAwakeWithDelay) {
                 PlayWithDelay(m_DelayOffsetTime);
             }
         }
