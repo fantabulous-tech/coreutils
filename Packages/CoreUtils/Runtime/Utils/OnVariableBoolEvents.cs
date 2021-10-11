@@ -16,6 +16,7 @@ namespace CoreUtils {
                 return;
             }
 
+            OnBoolChanged(m_Bool.Value);
             m_Bool.Changed += OnBoolChanged;
         }
 
