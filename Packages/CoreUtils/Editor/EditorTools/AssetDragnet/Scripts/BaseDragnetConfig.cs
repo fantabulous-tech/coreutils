@@ -9,6 +9,7 @@ using UnityEngine;
 namespace CoreUtils.Editor.AssetDragnet {
     public abstract class BaseDragnetConfig : ScriptableObject {
         public string IncludePattern;
+        public string ExcludePattern;
         public bool RealtimePreview = true;
         public bool ShowValidPaths;
         public List<DragnetRule> Rules = new List<DragnetRule>();
@@ -138,6 +139,17 @@ namespace CoreUtils.Editor.AssetDragnet {
                 }
             }
 
+            if (!ExcludePattern.IsNullOrEmpty()) {
+                try {
+                    Regex excludeRegex = new Regex(ExcludePattern, RegexOptions.IgnoreCase);
+                    assetPaths = assetPaths.Where(p => !excludeRegex.IsMatch(p));
+                }
+                catch (Exception e) {
+                    m_Error = e.Message;
+                    return;
+                }
+            }
+
             m_AssetPaths = assetPaths.ToArray();
             Array.Sort(m_AssetPaths, (p1, p2) => string.Compare(p1, p2, StringComparison.OrdinalIgnoreCase));
             UpdatePageItems();
@@ -206,10 +218,17 @@ namespace CoreUtils.Editor.AssetDragnet {
 
         private void ScrollViewGUI(DragnetWindow window) {
             float scrollViewWidth = window.position.width - 28;
-            string newExcludePattern = EditorGUILayout.DelayedTextField("Asset Pattern Filter", IncludePattern);
-            if (IncludePattern != newExcludePattern) {
-                Undo.RecordObject(this, "Asset Pattern Change");
-                IncludePattern = newExcludePattern;
+            string includePattern = EditorGUILayout.DelayedTextField("Include Regex", IncludePattern);
+            if (IncludePattern != includePattern) {
+                Undo.RecordObject(this, "Include Regex Change");
+                IncludePattern = includePattern;
+                RefreshAssetPaths();
+            }
+
+            string excludePattern = EditorGUILayout.DelayedTextField("Exclude Regex", ExcludePattern);
+            if (ExcludePattern != excludePattern) {
+                Undo.RecordObject(this, "Exclude Regex Change");
+                ExcludePattern = excludePattern;
                 RefreshAssetPaths();
             }
 

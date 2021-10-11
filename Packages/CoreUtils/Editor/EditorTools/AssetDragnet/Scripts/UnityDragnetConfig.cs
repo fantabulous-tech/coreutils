@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,11 +23,11 @@ namespace CoreUtils.Editor.AssetDragnet {
                                                     ? AssetDatabase.GetAllAssetPaths()
                                                     : AssetDatabase.FindAssets(AssetFilter).Select(AssetDatabase.GUIDToAssetPath);
 
-            return allAssetPaths.Where(File.Exists).Select(p => p.Substring(trimIndex));
+            return allAssetPaths.Where(p => p.StartsWith(RootPath, StringComparison.OrdinalIgnoreCase) && File.Exists(p)).Select(p => p.Substring(trimIndex));
         }
 
         protected override void TopConfigGUI() {
-            string newAssetFilter = EditorGUILayout.DelayedTextField("Asset Search Filter", AssetFilter);
+            string newAssetFilter = EditorGUILayout.DelayedTextField("Project Search", AssetFilter);
 
             if (AssetFilter == newAssetFilter) {
                 return;
