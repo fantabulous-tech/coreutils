@@ -58,7 +58,7 @@ namespace CoreUtils.Editor.AssetDragnet {
             Repaint();
         }
 
-        [MenuItem("Tools/CoreUtils/Asset Dragnet Window", false, (int)MenuOrder.Window)]
+        [MenuItem("Tools/CoreUtils/Asset Dragnet Window", false, (int) MenuOrder.Window)]
         private static void Init() {
             Init(null);
         }
@@ -72,18 +72,27 @@ namespace CoreUtils.Editor.AssetDragnet {
         }
 
         private void LoadConfigs(BaseDragnetConfig defaultConfig) {
-            string[] guids = AssetDatabase.FindAssets("t:" + typeof(BaseDragnetConfig).Name);
+            string[] guids = AssetDatabase.FindAssets("t:" + nameof(BaseDragnetConfig));
             m_Configs = guids.Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<BaseDragnetConfig>)
-                             .ToArray();
-            m_ConfigNames = s_Instance.m_Configs.Select(c => c.name).ToArray();
+                .ToArray();
+            m_ConfigNames = m_Configs.Select(c => c.name).ToArray();
             m_SelectedConfig = defaultConfig && m_Configs.Contains(defaultConfig)
-                                   ? defaultConfig
-                                   : s_Instance.m_Configs.FirstOrDefault();
+                ? defaultConfig
+                : m_Configs.FirstOrDefault();
             m_ConfigIndex = m_SelectedConfig ? m_Configs.IndexOf(m_SelectedConfig) : -1;
             Show();
         }
 
         private void OnGUI() {
+            if (m_ConfigNames == null || m_ConfigNames.Length == 0) {
+                LoadConfigs(null);
+            }
+
+            if (m_ConfigNames == null || m_ConfigNames.Length == 0) {
+                GUILayout.Label("No Dragnet configs found.");
+                return;
+            }
+
             int lastIndex = EditorGUILayout.Popup("Configs", m_ConfigIndex, m_ConfigNames);
             if (m_ConfigIndex != lastIndex) {
                 m_ConfigIndex = lastIndex;
