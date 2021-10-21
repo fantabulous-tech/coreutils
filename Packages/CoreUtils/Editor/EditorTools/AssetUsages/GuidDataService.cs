@@ -37,7 +37,7 @@ namespace CoreUtils.Editor.AssetUsages {
         }
 
         public static void Init() {
-            if (s_Init) {
+            if (s_Init || CoreUtilsSettings.DisableAssetGuidDatabase) {
                 return;
             }
 
@@ -78,6 +78,10 @@ namespace CoreUtils.Editor.AssetUsages {
         }
 
         private static void OnAssetsChanged(AssetChanges changes) {
+            if (CoreUtilsSettings.DisableAssetGuidDatabase) {
+                return;
+            }
+
             changes.Deleted.ForEach(RemoveFileByPath);
             changes.MovedFrom.ForEach(RemoveFileByPath);
             changes.Imported.ForEach(UpdateFileByPath);

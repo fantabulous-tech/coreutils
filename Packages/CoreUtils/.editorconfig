@@ -214,3 +214,19 @@ resharper_web_config_wrong_module_highlighting = warning
 indent_style = space
 indent_size = 4
 tab_width = 4
+
+[*]
+
+# Microsoft .NET properties
+csharp_new_line_before_members_in_object_initializers = false
+
+# ReSharper properties
+resharper_blank_lines_around_single_line_type = 0
+resharper_csharp_empty_block_style = together
+resharper_csharp_keep_blank_lines_in_declarations = 100
+resharper_csharp_max_line_length = 515
+resharper_csharp_wrap_after_declaration_lpar = true
+resharper_csharp_wrap_before_binary_opsign = true
+resharper_place_expr_accessor_on_single_line = true
+resharper_place_expr_method_on_single_line = true
+resharper_place_field_attribute_on_same_line = false

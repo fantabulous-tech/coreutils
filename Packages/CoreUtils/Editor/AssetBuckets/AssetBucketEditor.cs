@@ -42,8 +42,18 @@ namespace CoreUtils.AssetBuckets {
         }
 
         public override void OnInspectorGUI() {
-            DrawPropertiesExcluding(serializedObject, "m_Sources", "m_AssetRefs");
+            DrawPropertiesExcluding(serializedObject, "m_Sources", "m_AssetRefs", "m_ManualUpdate");
             serializedObject.ApplyModifiedProperties();
+
+            bool wasEnabled = GUI.enabled;
+            if (CoreUtilsSettings.DisableAssetBucketScanning) {
+                EditorGUILayout.HelpBox("Note: The Asset Bucket Watcher is disabled in Edit > Project Settings > CoreUtils, so automatic updating is disabled for all asset buckets.", MessageType.Info);
+                GUI.enabled = false;
+            } else {
+                Target.ManualUpdate = EditorGUILayout.Toggle("Manual Update", Target.ManualUpdate);
+            }
+
+            GUI.enabled = wasEnabled;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Folder", EditorStyles.boldLabel, GUILayout.Width(ObjectColumnWidth));
@@ -71,7 +81,7 @@ namespace CoreUtils.AssetBuckets {
 
             EditorGUILayout.Space();
 
-            bool wasEnabled = GUI.enabled;
+            wasEnabled = GUI.enabled;
             GUI.enabled = true;
 
             if (GUILayout.Button("Force Refresh")) {
@@ -107,13 +117,9 @@ namespace CoreUtils.AssetBuckets {
             }
         }
 
-        protected virtual void OnAssetGUI(AssetListItem item) {
-            item.OnAssetGUI(ObjectColumnWidth);
-        }
+        protected virtual void OnAssetGUI(AssetListItem item) => item.OnAssetGUI(ObjectColumnWidth);
 
-        private void OnUndoRedoPerformed() {
-            OnSourceItemsUpdated();
-        }
+        private void OnUndoRedoPerformed() => OnSourceItemsUpdated();
 
         private void OnBucketUpdated() {
             m_AssetItems = Target.EDITOR_Objects
@@ -147,9 +153,7 @@ namespace CoreUtils.AssetBuckets {
             OnBucketUpdated();
         }
 
-        private void RefreshSourceItemList() {
-            m_SourceItems = Target.EDITOR_Sources?.Select((a, i) => new AssetListItem(a, a ? a.name : "", typeof(Object), i)).ToArray() ?? new AssetListItem[0];
-        }
+        private void RefreshSourceItemList() => m_SourceItems = Target.EDITOR_Sources?.Select((a, i) => new AssetListItem(a, a ? a.name : "", typeof(Object), i)).ToArray() ?? new AssetListItem[0];
 
         private float GetLargestObjectFieldWidth() {
             float assetItemMax = m_AssetItems.Length > 0 ? m_AssetItems.Max(i => i.GetObjectFieldWidth()) : 0;

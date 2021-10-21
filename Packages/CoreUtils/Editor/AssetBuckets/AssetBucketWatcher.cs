@@ -37,6 +37,10 @@ namespace CoreUtils.AssetBuckets {
         // private static HashSet<string> s_ChangedDirectories;
 
         private static void OnDatabaseChanged(AssetChanges changes) {
+            if (CoreUtilsSettings.DisableAssetBucketScanning) {
+                return;
+            }
+
             HashSet<string> changedDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             changes.Imported.ForEach(f => AddPath(f, changedDirectories));
             changes.Deleted.ForEach(f => AddPath(f, changedDirectories));
