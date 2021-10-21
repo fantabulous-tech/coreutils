@@ -1,7 +1,7 @@
 {
   "name": "tech.fantabulous.coreutils",
   "displayName": "CoreUtils",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "unity": "2019.4",
   "description": "Structural systems and tools that make using Unity easier and more productive.",
   "keywords": [

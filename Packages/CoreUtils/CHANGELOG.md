@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.17] - 2021-10-21
+
+### Added
+- CoreUtils Settings to Edit > Project Settings > CoreUtils
+- Support for disabling Asset Bucket Watcher in CoreUtils Settings
+- Support for disabling Asset Usages Watcher in CoreUtils Settings
+- Notifications in various locations when functionality is disabled
+
 ## [1.0.16] - 2021-10-12
 
 ### Added
@@ -154,7 +162,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.16...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.17...HEAD
+[1.0.17]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.16...v1.0.17
 [1.0.16]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.15...v1.0.16
 [1.0.15]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.13...v1.0.14
