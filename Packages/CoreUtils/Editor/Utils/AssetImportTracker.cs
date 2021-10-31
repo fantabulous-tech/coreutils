@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace CoreUtils.Editor {
     public class AssetImportTracker : AssetPostprocessor {
@@ -20,36 +21,35 @@ namespace CoreUtils.Editor {
         private static AssetChanges s_LastChanges;
         private static double s_LastChangesTime;
 
-        public static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
+        public static void OnPostprocessAllAssets(string[] importedPaths, string[] deletedPaths, string[] movedToPaths, string[] movedFromPaths) {
+
             if (SceneSaved != null) {
-                importedAssets.Where(p => p.EndsWith(".unity")).Distinct().ForEach(p => SceneSaved(p));
+                importedPaths.Where(p => p.EndsWith(".unity")).Distinct().ForEach(p => SceneSaved(p));
             }
 
-            if (importedAssets.Length > 0 && AssetImported != null) {
-                importedAssets.Distinct().ForEach(p => AssetImported(p));
+            if (importedPaths.Length > 0 && AssetImported != null) {
+                importedPaths.Distinct().ForEach(p => AssetImported(p));
             }
 
-            if (deletedAssets.Length > 0 && AssetsDeleted != null) {
-                AssetsDeleted(deletedAssets);
+            if (deletedPaths.Length > 0) {
+                AssetsDeleted?.Invoke(deletedPaths);
             }
 
-            if (importedAssets.Length > 0 && AssetsImported != null) {
-                AssetsImported(importedAssets);
+            if (importedPaths.Length > 0) {
+                AssetsImported?.Invoke(importedPaths);
             }
 
-            if (movedAssets.Length > 0 && AssetsMoved != null) {
-                AssetsMoved(movedAssets);
+            if (movedToPaths.Length > 0) {
+                AssetsMoved?.Invoke(movedToPaths);
             }
 
             if (AssetsChanged == null && DelayedAssetsChanged == null) {
                 return;
             }
 
-            AssetChanges changes = new AssetChanges(importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
+            AssetChanges changes = new AssetChanges(importedPaths, deletedPaths, movedToPaths, movedFromPaths);
 
-            if (AssetsChanged != null) {
-                AssetsChanged(changes);
-            }
+            AssetsChanged?.Invoke(changes);
 
             if (DelayedAssetsChanged != null) {
                 s_LastChanges.Merge(changes);
@@ -62,7 +62,10 @@ namespace CoreUtils.Editor {
         }
 
         private static void OnDelayCall() {
-            DelayedAssetsChanged?.Invoke(s_LastChanges);
+            if (s_LastChanges.IsValid) {
+                DelayedAssetsChanged?.Invoke(s_LastChanges);
+            }
+
             s_LastChanges = new AssetChanges();
         }
     }
@@ -87,6 +90,7 @@ namespace CoreUtils.Editor {
             Deleted = Merge(Deleted, other.Deleted);
             MovedFrom = Merge(MovedFrom, other.MovedFrom);
             MovedTo = Merge(MovedTo, other.MovedTo);
+            IsValid = true;
         }
 
         private static string[] Merge(string[] a, string[] b) {
