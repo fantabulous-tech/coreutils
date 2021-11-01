@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.18] - 2021-11-01
+
+### Fixed
+- Catch certain situations where AssetImportTracker wouldn't properly notify of changes
+- Update GuidDatabase (used by Asset Usages Window) to be faster processing lots of imports at once
+
 ## [1.0.17] - 2021-10-21
 
 ### Added
@@ -162,7 +168,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.17...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.18...HEAD
+[1.0.18]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.17...v1.0.18
 [1.0.17]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.16...v1.0.17
 [1.0.16]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.15...v1.0.16
 [1.0.15]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.14...v1.0.15
