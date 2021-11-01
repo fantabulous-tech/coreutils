@@ -82,10 +82,14 @@ namespace CoreUtils.Editor.AssetUsages {
                 return;
             }
 
+            Connection.BeginTransaction();
+
             changes.Deleted.ForEach(RemoveFileByPath);
             changes.MovedFrom.ForEach(RemoveFileByPath);
             changes.Imported.ForEach(UpdateFileByPath);
             changes.MovedTo.ForEach(UpdateFileByPath);
+
+            Connection.Commit();
 
             // Don't need 'MovedTo' since they are included in the 'Imported' list.
             // changes.MovedTo.ForEach(UpdateFileByPath);
@@ -202,7 +206,7 @@ WHERE FileEntry.Path = ""{path}""
 
 DELETE
 FROM UsageEntry
-WHERE EXISTS 
+WHERE EXISTS
 (
 	SELECT *
 	FROM FileEntry
