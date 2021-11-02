@@ -18,6 +18,8 @@ namespace CoreUtils.Editor {
 
         private delegate T OnGUIDelegate<T>(string label, T value, params GUILayoutOption[] options);
 
+        private static HashSet<string> s_LoggedOnceErrors = new HashSet<string>();
+
         private static void UnserializedPropertyFieldGUILayout(object target, string propertyName, string label = null) {
             label = label ?? propertyName.ToSpacedName();
 
@@ -46,8 +48,17 @@ namespace CoreUtils.Editor {
             } else if (valueType.IsEnum) {
                 UnserializedPropertyFieldGUILayout<Enum>(target, propertyName, label, EditorGUILayout.EnumPopup);
             } else {
-                Debug.LogError("Can't find generic GUI for type " + valueType.Name);
+                LogErrorOnce("Can't find generic GUI for type " + valueType.Name, target is Object o ? o : null);
             }
+        }
+
+        private static void LogErrorOnce(string errorText, Object context) {
+            if (s_LoggedOnceErrors.Contains(errorText)) {
+                return;
+            }
+
+            s_LoggedOnceErrors.Add(errorText);
+            Debug.LogError(errorText, context);
         }
 
         private static void UnserializedPropertyFieldGUILayout<T>(object target, string propertyName, string label, OnGUIDelegate<T> onGUI) {

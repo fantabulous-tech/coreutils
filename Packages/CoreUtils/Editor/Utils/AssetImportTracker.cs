@@ -22,8 +22,6 @@ namespace CoreUtils.Editor {
         private static AssetChanges s_LastChanges;
 
         public static void OnPostprocessAllAssets(string[] importedPaths, string[] deletedPaths, string[] movedToPaths, string[] movedFromPaths) {
-            // LogChanges(importedPaths, deletedPaths, movedToPaths);
-
             if (SceneSaved != null) {
                 importedPaths.Where(p => p.EndsWith(".unity")).Distinct().ForEach(p => SceneSaved(p));
             }
@@ -63,23 +61,6 @@ namespace CoreUtils.Editor {
                     EditorApplication.delayCall += OnDelayCall;
                 }
             }
-        }
-
-        private static void LogChanges(IReadOnlyCollection<string> importedPaths, IReadOnlyCollection<string> deletedPaths, IReadOnlyCollection<string> movedToPaths) {
-            const int kLimit = 5000;
-            string summary = $"AssetImportTracker changes: {importedPaths.Count:N0} imported, {deletedPaths.Count:N0} deleted, {movedToPaths.Count:N0} moved";
-
-            void AddSummary(string name, IReadOnlyCollection<string> files) {
-                if (files != null && files.Count > 0) {
-                    summary += files.Count > kLimit ? $"\n\n{name}: Too many to list! (>{kLimit})" : $"\n\n{name}:\n{files.AggregateToString("\n")}";
-                }
-            }
-
-            AddSummary("Imported", importedPaths);
-            AddSummary("Deleted", deletedPaths);
-            AddSummary("Moved", movedToPaths);
-
-            Debug.Log($"{summary}\n");
         }
 
         private static void OnDelayCall() {
