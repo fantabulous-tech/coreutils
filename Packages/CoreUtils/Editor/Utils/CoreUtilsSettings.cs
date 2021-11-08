@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using CoreUtils.Editor.AssetUsages;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace CoreUtils.Editor {
 
         public static bool DisableAssetBucketScanning {
             get => Instance.m_DisableAssetBucketScanning;
-            set {
+            private set {
                 if (Instance.m_DisableAssetBucketScanning == value) {
                     return;
                 }
@@ -32,7 +33,7 @@ namespace CoreUtils.Editor {
 
         public static bool DisableAssetGuidDatabase {
             get => Instance.m_DisableAssetGuidDatabase;
-            set {
+            private set {
                 if (Instance.m_DisableAssetGuidDatabase == value) {
                     return;
                 }
@@ -82,8 +83,13 @@ namespace CoreUtils.Editor {
             }
 
             string folderPath = Path.GetDirectoryName(s_FilePath);
+
             if (folderPath != null && !Directory.Exists(folderPath)) {
                 Directory.CreateDirectory(folderPath);
+            }
+
+            if (Provider.hasCheckoutSupport) {
+                Provider.Checkout(s_FilePath, CheckoutMode.Asset);
             }
 
             InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] {s_Instance}, s_FilePath, true);

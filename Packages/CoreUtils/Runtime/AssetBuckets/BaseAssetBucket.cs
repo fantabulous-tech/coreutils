@@ -10,7 +10,7 @@ namespace CoreUtils.AssetBuckets {
         [SerializeField] private List<AssetReference> m_AssetRefs;
         [SerializeField] private bool m_ManualUpdate;
 
-        protected List<AssetReference> AssetRefs => UnityUtils.GetOrSet(ref m_AssetRefs, () => new List<AssetReference>());
+        public List<AssetReference> AssetRefs => UnityUtils.GetOrSet(ref m_AssetRefs, () => new List<AssetReference>());
 
         public abstract Type AssetType { get; }
         public abstract Type AssetSearchType { get; }
@@ -94,7 +94,7 @@ namespace CoreUtils.AssetBuckets {
             if (!EDITOR_IsValidDirectory(path)) {
                 return false;
             }
-            
+
             // If the guid already exists, then this path isn't missing.
             string guid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
             if (AssetRefs.Any(r => r.Guid != null && r.Guid.Equals(guid))) {

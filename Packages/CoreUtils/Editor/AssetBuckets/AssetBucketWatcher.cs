@@ -19,9 +19,9 @@ namespace CoreUtils.AssetBuckets {
                 if (s_LastBuckets == null || !newBuckets.IsEqual(s_LastBuckets)) {
                     s_LastBuckets = newBuckets;
                     s_Buckets = newBuckets
-                                .Select(AssetDatabase.GUIDToAssetPath)
-                                .Select(AssetDatabase.LoadAssetAtPath<BaseAssetBucket>)
-                                .ToArray();
+                        .Select(AssetDatabase.GUIDToAssetPath)
+                        .Select(AssetDatabase.LoadAssetAtPath<BaseAssetBucket>)
+                        .ToArray();
                 }
 
                 return s_Buckets;
@@ -33,8 +33,6 @@ namespace CoreUtils.AssetBuckets {
             AssetImportTracker.DelayedAssetsChanged -= OnDatabaseChanged;
             AssetImportTracker.DelayedAssetsChanged += OnDatabaseChanged;
         }
-
-        // private static HashSet<string> s_ChangedDirectories;
 
         private static void OnDatabaseChanged(AssetChanges changes) {
             if (CoreUtilsSettings.DisableAssetBucketScanning) {
@@ -61,7 +59,7 @@ namespace CoreUtils.AssetBuckets {
                 return;
             }
 
-            // Skip is no source paths are in the changed directories.
+            // Skip if no source paths are in the changed directories.
             string[] sourcePaths = bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
 
             if (changedDirectories != null && !changedDirectories.Any(bucket.EDITOR_IsValidDirectory)) {
@@ -75,29 +73,52 @@ namespace CoreUtils.AssetBuckets {
                 }
             }
 
-            FindReferences(bucket, sourcePaths);
+            FindReferences(bucket, sourcePaths, true);
         }
 
-        public static void FindReferences(BaseAssetBucket bucket, string[] sourcePaths = null) {
+        public static bool FindReferences(BaseAssetBucket bucket, string[] sourcePaths = null, bool skipIfUnchanged = false) {
             sourcePaths = sourcePaths ?? bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
 
             string filter = bucket.AssetSearchType.IsSubclassOf(typeof(Component)) ? "t:GameObject" : "t:" + bucket.AssetSearchType.Name;
 
             string[] newPaths = AssetDatabase
-                                .FindAssets(filter, sourcePaths)
-                                .Select(AssetDatabase.GUIDToAssetPath).Where(p => CanBeType(p, bucket.AssetSearchType))
-                                .OrderBy(System.IO.Path.GetFileName)
-                                .ToArray();
+                .FindAssets(filter, sourcePaths)
+                .OrderBy(guid => guid)
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Where(p => CanBeType(p, bucket.AssetSearchType))
+                .ToArray();
 
-            HashSet<Object> newObjects = new HashSet<Object>(newPaths.Select(p => AssetDatabase.LoadAssetAtPath(p, bucket.AssetSearchType)).Where(o => o && bucket.EDITOR_CanAdd(o)).OrderBy(o => o.name));
+            List<Object> newObjects = newPaths
+                .Select(p => AssetDatabase.LoadAssetAtPath(p, bucket.AssetSearchType))
+                .Where(o => o && bucket.EDITOR_CanAdd(o))
+                .ToList();
+
+            // Skip if the new object list is the same as the existing bucket objects.
+            if (skipIfUnchanged && BucketIsUnchanged(bucket, newObjects)) {
+                return false;
+            }
 
             bucket.EDITOR_Clear();
-            // newObjects.ForEach(bucket.EDITOR_TryAdd);
-            bucket.EDITOR_ForceAdd(newObjects);
+            bucket.EDITOR_ForceAdd(new HashSet<Object>(newObjects));
             bucket.EDITOR_Sort(AssetGuidSorter);
             EditorUtility.SetDirty(bucket);
             SaveAssetsDelayed();
-            Debug.LogFormat(bucket, "<color=#6699cc>AssetBuckets</color>: Updated {0}", bucket.name);
+            Debug.Log($"<color=#6699cc>AssetBuckets</color>: Updated {bucket.name}", bucket);
+            return true;
+        }
+
+        private static bool BucketIsUnchanged(BaseAssetBucket bucket, List<Object> newObjects) {
+            if (newObjects.Count != bucket.AssetRefs.Count) {
+                return false;
+            }
+
+            for (int i = 0; i < bucket.AssetRefs.Count; i++) {
+                if (newObjects[i] != bucket.AssetRefs[i].Asset) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static void AddPath(string filePath, HashSet<string> changePaths) {
@@ -133,19 +154,6 @@ namespace CoreUtils.AssetBuckets {
                 s_WillSaveAssets = false;
                 AssetDatabase.SaveAssets();
             }
-        }
-
-        private static bool ContainsAll(IReadOnlyCollection<Object> set, IReadOnlyCollection<Object> list2) {
-            return set.Count == list2.Count && list2.All(set.Contains);
-        }
-
-        private static bool IsEqual(string[] newPaths, IReadOnlyCollection<Object> objects) {
-            if (newPaths.Length != objects.Count) {
-                return false;
-            }
-
-            string[] currentPaths = objects.Where(o => o).Select(AssetDatabase.GetAssetPath).OrderBy(p => p).ToArray();
-            return newPaths.IsEqual(currentPaths, (a, b) => a.Equals(b, StringComparison.OrdinalIgnoreCase));
         }
 
         private static bool CanBeType(string path, Type testType) {
