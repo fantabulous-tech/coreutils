@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.0.20] - 2021-11-08
+
+### Added
+- Support for checking out CoreUtilsSettings file from version control
+
+### Fixed
+- Asset Bucket inspector view column widths
+- Unnecessary updating/check-out of buckets
+
+### Changed
+- Updated .editorconfig for better match .NET standard
+- Code cleanup pass
+
+
 ## [1.0.19] - 2021-11-03
 
 ### Fixed
@@ -18,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Catch certain situations where AssetImportTracker wouldn't properly notify of changes
 - Update GuidDatabase (used by Asset Usages Window) to be faster processing lots of imports at once
 
+
 ## [1.0.17] - 2021-10-21
 
 ### Added
@@ -25,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for disabling Asset Bucket Watcher in CoreUtils Settings
 - Support for disabling Asset Usages Watcher in CoreUtils Settings
 - Notifications in various locations when functionality is disabled
+
 
 ## [1.0.16] - 2021-10-12
 
@@ -45,20 +62,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed overly verbose 'Cancel' logging in Delay system
 
+
 ## [1.0.14] - 2021-8-31
 
 ### Fixed
 - Fixed broken namespace when creating C# Editor from a script with parens on a separate line
+
 
 ## [1.0.13] - 2021-8-31
 
 ### Updated
 - Removed case sensitivity from StateMachine
 
+
 ## [1.0.12] - 2021-8-22
 
 ### Updated
 - Expanded `SaveLoadVariables` to support external access
+
 
 ## [1.0.11] - 2021-8-16
 
@@ -74,10 +95,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Updated
 - Improved GameVariable and AssetBucket `AutoFill` options
 
+
 ## [1.0.10] - 2021-6-28
 
 ### Updated
 - Grouped CoreUtil menu items together
+
 
 ## [1.0.9] - 2021-4-14
 
@@ -174,7 +197,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.19...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.20...HEAD
+[1.0.20]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.19...v1.0.20
 [1.0.19]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.18...v1.0.19
 [1.0.18]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.17...v1.0.18
 [1.0.17]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.16...v1.0.17
