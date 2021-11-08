@@ -2,6 +2,9 @@
 using System.IO;
 using System.Linq;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace CoreUtils.GameVariables {
     public class Storage : MonoBehaviour {
@@ -87,7 +90,7 @@ namespace CoreUtils.GameVariables {
             string assetPath = FilePath.ReplaceRegex("^.*/Assets/", "Assets/");
 
             if (assetPath.StartsWith("Assets/")) {
-                UnityEditor.AssetDatabase.ImportAsset(assetPath);
+                AssetDatabase.ImportAsset(assetPath);
             }
 #endif
         }

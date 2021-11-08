@@ -1,6 +1,5 @@
 using CoreUtils.GameVariables;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace CoreUtils {
     public class OnVariableFloatEvents : MonoBehaviour {

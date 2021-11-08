@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace CoreUtils.Editor {
     /// <summary>
@@ -35,7 +37,7 @@ namespace CoreUtils.Editor {
 
         [MenuItem("Tools/CoreUtils/Object Bookmarks Window", false, (int)MenuOrder.Window)]
         public static void OpenWindow() {
-            ObjectBookmarkWindow window = (ObjectBookmarkWindow) GetWindow(typeof(ObjectBookmarkWindow), false, "Bookmarks");
+            ObjectBookmarkWindow window = (ObjectBookmarkWindow)GetWindow(typeof(ObjectBookmarkWindow), false, "Bookmarks");
             window.Show();
         }
 
@@ -243,7 +245,7 @@ namespace CoreUtils.Editor {
 
                 if (GUI.Button(openAssetButtonRect, new GUIContent("↗", "Open asset."))) {
                     if (Directory.Exists(assetPath)) {
-                        System.Diagnostics.Process.Start(assetPath.Replace('/', '\\'));
+                        Process.Start(assetPath.Replace('/', '\\'));
                     } else {
                         AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath(assetPath, typeof(Object)));
                     }

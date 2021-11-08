@@ -368,10 +368,7 @@ namespace RSG {
                 rejectHandlers = new List<RejectHandler>();
             }
 
-            rejectHandlers.Add(new RejectHandler {
-                callback = onRejected,
-                rejectable = rejectable
-            });
+            rejectHandlers.Add(new RejectHandler {callback = onRejected, rejectable = rejectable});
         }
 
         /// <summary>
@@ -382,10 +379,7 @@ namespace RSG {
                 resolveHandlers = new List<ResolveHandler>();
             }
 
-            resolveHandlers.Add(new ResolveHandler {
-                callback = onResolved,
-                rejectable = rejectable
-            });
+            resolveHandlers.Add(new ResolveHandler {callback = onResolved, rejectable = rejectable});
         }
 
         /// <summary>
@@ -502,8 +496,8 @@ namespace RSG {
             if (CurState != PromiseState.Pending) {
                 throw new PromiseStateException(
                     "Attempt to reject a promise '" + Name + "' that is already in state: " + CurState
-                                                    + ", a promise can only be rejected when it is still in state: "
-                                                    + PromiseState.Pending
+                    + ", a promise can only be rejected when it is still in state: "
+                    + PromiseState.Pending
                 );
             }
 
@@ -524,8 +518,8 @@ namespace RSG {
             if (CurState != PromiseState.Pending) {
                 throw new PromiseStateException(
                     "Attempt to resolve a promise '" + Name + "' that is already in state: " + CurState
-                                                     + ", a promise can only be resolved when it is still in state: "
-                                                     + PromiseState.Pending
+                    + ", a promise can only be resolved when it is still in state: "
+                    + PromiseState.Pending
                 );
             }
 
@@ -877,7 +871,7 @@ namespace RSG {
         ///     Returns a promise of a collection of the resolved results.
         /// </summary>
         public static IPromise All(params IPromise[] promises) {
-            return All((IEnumerable<IPromise>) promises); // Cast is required to force use of the other All function.
+            return All((IEnumerable<IPromise>)promises); // Cast is required to force use of the other All function.
         }
 
         /// <summary>
@@ -939,7 +933,7 @@ namespace RSG {
         ///     Takes a number of functions each of which starts an async operation and yields a promise.
         /// </summary>
         public static IPromise Sequence(params Func<IPromise>[] fns) {
-            return Sequence((IEnumerable<Func<IPromise>>) fns);
+            return Sequence((IEnumerable<Func<IPromise>>)fns);
         }
 
         /// <summary>
@@ -998,7 +992,7 @@ namespace RSG {
         ///     Returns the value from the first promise that has resolved.
         /// </summary>
         public static IPromise Race(params IPromise[] promises) {
-            return Race((IEnumerable<IPromise>) promises); // Cast is required to force use of the other function.
+            return Race((IEnumerable<IPromise>)promises); // Cast is required to force use of the other function.
         }
 
         /// <summary>

@@ -1,12 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace CoreUtils {
     public static class UnityUtils {
@@ -60,14 +65,14 @@ namespace CoreUtils {
         public static void Quit() {
 #if UNITY_EDITOR
             if (Application.isEditor) {
-                UnityEditor.EditorApplication.ExitPlaymode();
+                EditorApplication.ExitPlaymode();
                 return;
             }
 #endif
             // Application.Quit();
 
             // Work around for crash on quit.
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            Process.GetCurrentProcess().Kill();
         }
 
         /// <summary>
@@ -229,7 +234,7 @@ namespace CoreUtils {
 
             while (t.parent && t != root) {
                 t = t.parent;
-                path = String.Format("{0}/{1}", t.FullName(FullName.Parts.UniqueName), path);
+                path = string.Format("{0}/{1}", t.FullName(FullName.Parts.UniqueName), path);
             }
 
             if (root && t != root) {
@@ -398,9 +403,9 @@ namespace CoreUtils {
 
         private static Bounds CombineBounds(Bounds bounds, Bounds subBounds) {
             bounds.max = new Vector3(Mathf.Max(subBounds.max.x, bounds.max.x), Mathf.Max(subBounds.max.y, bounds.max.y),
-                                     Mathf.Max(subBounds.max.z, bounds.max.z));
+                Mathf.Max(subBounds.max.z, bounds.max.z));
             bounds.min = new Vector3(Mathf.Min(subBounds.min.x, bounds.min.x), Mathf.Min(subBounds.min.y, bounds.min.y),
-                                     Mathf.Min(subBounds.min.z, bounds.min.z));
+                Mathf.Min(subBounds.min.z, bounds.min.z));
             return bounds;
         }
 

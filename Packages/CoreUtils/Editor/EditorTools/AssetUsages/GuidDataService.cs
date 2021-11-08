@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using SQLite4Unity3d;
 using UnityEditor;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace CoreUtils.Editor.AssetUsages {

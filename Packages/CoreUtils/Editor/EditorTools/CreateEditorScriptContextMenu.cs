@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CoreUtils.Editor {
     [UsedImplicitly]
     public static class CreateEditorScriptContextMenu {
-        [MenuItem("Assets/Create/C# Editor Script", true, (int) MenuOrder.EditorScript)]
+        [MenuItem("Assets/Create/C# Editor Script", true, (int)MenuOrder.EditorScript)]
         private static bool ValidateCreateEditorScript() {
             string path = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (Path.GetExtension(path) != ".cs") {
@@ -16,7 +16,7 @@ namespace CoreUtils.Editor {
             return !File.Exists(editorPath);
         }
 
-        [MenuItem("Assets/Create/C# Editor Script", false, (int) MenuOrder.EditorScript)]
+        [MenuItem("Assets/Create/C# Editor Script", false, (int)MenuOrder.EditorScript)]
         private static void CreateEditorScript() {
             string path = AssetDatabase.GetAssetPath(Selection.activeObject);
             string className = Path.GetFileNameWithoutExtension(path);
@@ -49,8 +49,7 @@ namespace CoreUtils.Editor {
             }
 
             // Handle namespaces with parens on separate line
-            if (!namespaceLine.Contains("{"))
-            {
+            if (!namespaceLine.Contains("{")) {
                 namespaceLine = namespaceLine + "\n{";
             }
 

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace CoreUtils.AssetBuckets {
     public abstract class BaseAssetBucket : BaseBucket {
@@ -34,7 +37,7 @@ namespace CoreUtils.AssetBuckets {
         [NonSerialized] private List<string> m_EDITOR_SourcePaths;
 
         public List<Object> EDITOR_Sources => UnityUtils.GetOrSet(ref m_Sources, () => new List<Object> {null});
-        public List<string> EDITOR_SourcePaths => UnityUtils.GetOrSet(ref m_EDITOR_SourcePaths, () => EDITOR_Sources.Where(o => o).Select(UnityEditor.AssetDatabase.GetAssetPath).ToList());
+        public List<string> EDITOR_SourcePaths => UnityUtils.GetOrSet(ref m_EDITOR_SourcePaths, () => EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToList());
         public List<Object> EDITOR_Objects => AssetRefs.Select(a => a.Asset).ToList();
         public event Action EDITOR_Updated;
         public abstract void EDITOR_Clear();
@@ -60,7 +63,6 @@ namespace CoreUtils.AssetBuckets {
     }
 
     public abstract class GenericAssetBucket<T> : BaseAssetBucket where T : Object {
-
         public override Type AssetType => typeof(T);
         public override Type AssetSearchType => typeof(T);
 
@@ -77,7 +79,7 @@ namespace CoreUtils.AssetBuckets {
         }
 
         public virtual T Get(string assetName) {
-            return (T) AssetRefs.FirstOrDefault(a => a != null && a.Name.Equals(assetName, StringComparison.OrdinalIgnoreCase))?.Asset;
+            return (T)AssetRefs.FirstOrDefault(a => a != null && a.Name.Equals(assetName, StringComparison.OrdinalIgnoreCase))?.Asset;
         }
 
         protected virtual string GetName(T asset) {
@@ -96,14 +98,14 @@ namespace CoreUtils.AssetBuckets {
             }
 
             // If the guid already exists, then this path isn't missing.
-            string guid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
+            string guid = AssetDatabase.AssetPathToGUID(path);
             if (AssetRefs.Any(r => r.Guid != null && r.Guid.Equals(guid))) {
                 return false;
             }
 
             // We now have a valid path and a missing guid, so we should load and test the asset itself.
             // If we can add the asset, then this path is missing.
-            T asset = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+            T asset = AssetDatabase.LoadAssetAtPath<T>(path);
             return EDITOR_CanAdd(asset);
         }
 
@@ -135,16 +137,16 @@ namespace CoreUtils.AssetBuckets {
             T typedAsset = EDITOR_GetTypedAsset(asset);
 
             if (typedAsset && AssetRefs.All(a => a.Asset != typedAsset)) {
-                string path = UnityEditor.AssetDatabase.GetAssetPath(asset);
-                string guid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
+                string path = AssetDatabase.GetAssetPath(asset);
+                string guid = AssetDatabase.AssetPathToGUID(path);
                 AssetRefs.Add(new AssetReference(typedAsset, EDITOR_GetAssetName(typedAsset), guid));
             }
         }
 
         public override void EDITOR_ForceAdd(HashSet<Object> newObjects) {
             foreach (Object asset in newObjects) {
-                string path = UnityEditor.AssetDatabase.GetAssetPath(asset);
-                string guid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
+                string path = AssetDatabase.GetAssetPath(asset);
+                string guid = AssetDatabase.AssetPathToGUID(path);
                 AssetRefs.Add(new AssetReference(asset, EDITOR_GetAssetName(asset), guid));
             }
         }

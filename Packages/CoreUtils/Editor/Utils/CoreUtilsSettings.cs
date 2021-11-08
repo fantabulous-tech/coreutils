@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEditorInternal;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
 namespace CoreUtils.Editor {
     public class CoreUtilsSettings : ScriptableObject {
@@ -72,13 +73,13 @@ namespace CoreUtils.Editor {
                 created.hideFlags = HideFlags.HideAndDontSave;
             }
 
-            System.Diagnostics.Debug.Assert(s_Instance != null);
+            Debug.Assert(s_Instance != null);
             return s_Instance;
         }
 
         private static void Save() {
             if (s_Instance == null) {
-                Debug.Log("Cannot save ScriptableSingleton: no instance!");
+                UnityEngine.Debug.Log("Cannot save ScriptableSingleton: no instance!");
                 return;
             }
 

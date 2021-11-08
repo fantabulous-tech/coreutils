@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace CoreUtils.AssetBuckets {
     public abstract class PrefabInstanceBucket<T> : GenericAssetBucket<T> where T : Object {
@@ -100,8 +103,8 @@ namespace CoreUtils.AssetBuckets {
                 return false;
             }
 
-            UnityEditor.PrefabAssetType prefabType = UnityEditor.PrefabUtility.GetPrefabAssetType(asset);
-            bool rightType = prefabType == UnityEditor.PrefabAssetType.Regular || prefabType == UnityEditor.PrefabAssetType.Variant;
+            PrefabAssetType prefabType = PrefabUtility.GetPrefabAssetType(asset);
+            bool rightType = prefabType == PrefabAssetType.Regular || prefabType == PrefabAssetType.Variant;
             return rightType && base.EDITOR_CanAdd(asset);
         }
 #endif
