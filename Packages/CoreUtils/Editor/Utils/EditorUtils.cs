@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CoreUtils.GameVariables;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace CoreUtils.Editor {
         private static HashSet<string> s_LoggedOnceErrors = new HashSet<string>();
 
         private static void UnserializedPropertyFieldGUILayout(object target, string propertyName, string label = null) {
-            label = label ?? propertyName.ToSpacedName();
+            label = !label.IsNullOrEmpty() ? label : propertyName.ToSpacedName();
 
             Type valueType = ReflectionUtils.GetPropertyType(target, propertyName);
 
@@ -47,6 +48,9 @@ namespace CoreUtils.Editor {
                 UnserializedPropertyFieldGUILayout<Object>(target, propertyName, label, (l, v, p) => EditorGUILayout.ObjectField(l, v, valueType, true, p));
             } else if (valueType.IsEnum) {
                 UnserializedPropertyFieldGUILayout<Enum>(target, propertyName, label, EditorGUILayout.EnumPopup);
+            } else if (target is BaseGameVariable variable) {
+                // Fall back to just displaying the value string for game variables.
+                EditorGUILayout.LabelField(label, variable.ValueString);
             } else {
                 LogErrorOnce("Can't find generic GUI for type " + valueType.Name, target is Object o ? o : null);
             }
@@ -69,16 +73,17 @@ namespace CoreUtils.Editor {
             }
         }
 
-        [MenuItem("Tools/CoreUtils/Sort Siblings", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Sort Siblings", true, (int)MenuOrder.GameObject)]
         public static bool CanSortSiblings() {
             return Selection.transforms.Length > 0;
         }
 
-        [MenuItem("Tools/CoreUtils/Sort Siblings", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Sort Siblings", false, (int)MenuOrder.GameObject)]
         public static void SortSiblings() {
             if (Selection.transforms.Length == 0) {
                 return;
             }
+
             List<Transform> siblings =
                 Selection.transforms.SelectMany(GetSiblings).Distinct().OrderBy(t => t.name).ToList();
             for (int i = 0; i < siblings.Count; i++) {
@@ -91,35 +96,37 @@ namespace CoreUtils.Editor {
             return !parent ? GetRootSceneObjects().Select(go => go.transform) : parent.GetChildren();
         }
 
-        [MenuItem("Tools/CoreUtils/Group Selected %g", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Group Selected %g", true, (int)MenuOrder.GameObject)]
         public static bool CanGroupSelected() {
             return Selection.gameObjects.Length > 0;
         }
 
-        [MenuItem("Tools/CoreUtils/Group Selected %g", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Group Selected %g", false, (int)MenuOrder.GameObject)]
         public static void GroupSelected() {
             if (!Selection.activeTransform) {
                 return;
             }
+
             GameObject go = new GameObject(Selection.activeTransform.name + " Group");
             Undo.RegisterCreatedObjectUndo(go, "Group Selected");
             go.transform.SetParent(Selection.activeTransform.parent, false);
             go.transform.SetSiblingIndex(Selection.activeTransform.GetSiblingIndex());
             go.transform.position = Selection.transforms.Length == 1
-                                        ? Selection.transforms[0].position
-                                        : UnityUtils.GetCenter(Selection.transforms);
+                ? Selection.transforms[0].position
+                : UnityUtils.GetCenter(Selection.transforms);
             foreach (Transform transform in Selection.transforms) {
                 Undo.SetTransformParent(transform, go.transform, "Group Selected");
             }
+
             Selection.activeGameObject = go;
         }
 
-        [MenuItem("Tools/CoreUtils/Ungroup Selected %#g", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Ungroup Selected %#g", true, (int)MenuOrder.GameObject)]
         public static bool CanUngroupSelected() {
             return Selection.transforms.Any();
         }
 
-        [MenuItem("Tools/CoreUtils/Ungroup Selected %#g", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Ungroup Selected %#g", false, (int)MenuOrder.GameObject)]
         public static void UngroupSelected() {
             if (!Selection.transforms.Any()) {
                 return;
@@ -132,10 +139,12 @@ namespace CoreUtils.Editor {
                 if (!go) {
                     return;
                 }
+
                 if (go.transform.childCount == 0) {
                     selectables.Add(go);
                     return;
                 }
+
                 Transform t = go.transform;
                 int index = t.GetSiblingIndex();
                 Transform parent = t.parent;
@@ -143,6 +152,7 @@ namespace CoreUtils.Editor {
                     if (!c) {
                         return;
                     }
+
                     Undo.SetTransformParent(c, parent, "Ungroup Selected");
                     c.SetSiblingIndex(index);
                     index++;
@@ -160,19 +170,19 @@ namespace CoreUtils.Editor {
         public static event ApplyHandler OnApply;
         public static event ApplyHandler OnApplied;
 
-        [MenuItem("Tools/CoreUtils/Apply Selected %#a", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Apply Selected %#a", true, (int)MenuOrder.GameObject)]
         public static bool CanApplySelected() {
             return Selection.gameObjects.Any(IsInstance);
         }
 
-        [MenuItem("Tools/CoreUtils/Apply Selected %#a", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Apply Selected %#a", false, (int)MenuOrder.GameObject)]
         public static void ApplySelected() {
             List<string> appliedList = new List<string>();
             foreach (
                 GameObject instance in
                 Selection.gameObjects.Select<GameObject, Object>(PrefabUtility.GetOutermostPrefabInstanceRoot)
-                         .Distinct()
-                         .OfType<GameObject>()) {
+                    .Distinct()
+                    .OfType<GameObject>()) {
                 Transform root = instance.transform.root;
 
                 if (!instance.transform.IsChildOf(root.transform)) {
@@ -191,16 +201,17 @@ namespace CoreUtils.Editor {
                     OnApplied(instance);
                 }
             }
+
             AssetDatabase.SaveAssets();
             Debug.Log("Applied changes to " + appliedList.Count + " prefabs.\n" + appliedList.AggregateToString("\n"));
         }
 
-        [MenuItem("Tools/CoreUtils/Really Break Prefab Instance", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Really Break Prefab Instance", true, (int)MenuOrder.GameObject)]
         public static bool CanReallyBreakPrefab() {
             return Selection.gameObjects.Select(PrefabUtility.GetCorrespondingObjectFromSource).Any(p => p);
         }
 
-        [MenuItem("Tools/CoreUtils/Really Break Prefab Instance", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Really Break Prefab Instance", false, (int)MenuOrder.GameObject)]
         public static void ReallyBreakPrefab() {
             Selection.gameObjects.ForEach(BreakPrefab);
         }
@@ -209,6 +220,7 @@ namespace CoreUtils.Editor {
             if (!PrefabUtility.GetCorrespondingObjectFromSource(original)) {
                 return;
             }
+
             GameObject root = PrefabUtility.GetOutermostPrefabInstanceRoot(original);
             Transform parent = root.transform.parent;
             int index = root.transform.GetSiblingIndex();
@@ -225,36 +237,37 @@ namespace CoreUtils.Editor {
                 selectedObjects[selectedIndex] = go;
                 Selection.objects = selectedObjects;
             }
+
             Undo.DestroyObjectImmediate(root);
             Debug.Log(string.Format("We broke {0} for realsies.", go.name), go);
         }
 
-        [MenuItem("Tools/CoreUtils/Zero Selected %#z", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Zero Selected %#z", true, (int)MenuOrder.GameObject)]
         public static bool CanZeroSelected() {
             return Selection.gameObjects.Any();
         }
 
-        [MenuItem("Tools/CoreUtils/Zero Selected %#z", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Zero Selected %#z", false, (int)MenuOrder.GameObject)]
         public static void ZeroSelected() {
             Selection.transforms.ForEach(Zero);
         }
 
-        [MenuItem("Tools/CoreUtils/Zero Selected To Children Center", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Zero Selected To Children Center", true, (int)MenuOrder.GameObject)]
         public static bool CanZeroSelectedToCenter() {
             return Selection.gameObjects.Any();
         }
 
-        [MenuItem("Tools/CoreUtils/Zero Selected To Children Center", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Zero Selected To Children Center", false, (int)MenuOrder.GameObject)]
         public static void ZeroSelectedToCenter() {
             Selection.transforms.ForEach(ZeroToCenter);
         }
 
-        [MenuItem("Tools/CoreUtils/Revert Selected", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Revert Selected", true, (int)MenuOrder.GameObject)]
         public static bool CanRevertSelected() {
             return Selection.gameObjects.Any(IsInstance);
         }
 
-        [MenuItem("Tools/CoreUtils/Revert Selected", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Revert Selected", false, (int)MenuOrder.GameObject)]
         public static void RevertSelected() {
             foreach (GameObject instance in Selection.gameObjects) {
                 Undo.RegisterCompleteObjectUndo(instance, "Revert Selected");
@@ -266,15 +279,16 @@ namespace CoreUtils.Editor {
                 instance.transform.localRotation = rotation;
                 instance.transform.localScale = scale;
             }
+
             AssetDatabase.SaveAssets();
         }
 
-        [MenuItem("Tools/CoreUtils/Select Source Prefab", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Select Source Prefab", true, (int)MenuOrder.GameObject)]
         public static bool CanSelectSourcePrefab() {
             return Selection.gameObjects.Any(IsInstance);
         }
 
-        [MenuItem("Tools/CoreUtils/Select Source Prefab", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Select Source Prefab", false, (int)MenuOrder.GameObject)]
         public static bool SelectSourcePrefab() {
             Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(Selection.activeGameObject);
             Selection.activeObject = prefab;
@@ -288,10 +302,12 @@ namespace CoreUtils.Editor {
             if (!go) {
                 return null;
             }
+
             GameObject root = PrefabUtility.GetOutermostPrefabInstanceRoot(go);
             if (!root) {
                 return null;
             }
+
             return PrefabUtility.GetCorrespondingObjectFromSource(root);
         }
 
@@ -307,6 +323,7 @@ namespace CoreUtils.Editor {
                 Scene scene = SceneManager.GetSceneAt(i);
                 objects.AddRange(scene.GetRootGameObjects());
             }
+
             return objects;
         }
 
@@ -330,6 +347,7 @@ namespace CoreUtils.Editor {
             if (layerId < 0 || controller != null && layerId >= controller.layers.Length) {
                 return null;
             }
+
             return controller == null ? null : controller.layers[layerId].stateMachine.states.Select(s => s.state);
         }
 
@@ -431,7 +449,7 @@ namespace CoreUtils.Editor {
         }
 
         public static T GetAssetFromGuid<T>(string guid) where T : Object {
-            return (T) GetAssetFromGuid(guid, typeof(T));
+            return (T)GetAssetFromGuid(guid, typeof(T));
         }
 
         public static Object GetAssetFromGuid(string guid, Type type) {
