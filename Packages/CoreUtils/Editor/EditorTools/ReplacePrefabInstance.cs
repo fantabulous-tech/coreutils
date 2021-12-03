@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CoreUtils.Editor {
     public static class ReplacePrefabInstance {
-        [MenuItem("Tools/CoreUtils/Replace Prefab Instance", true, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Replace Prefab Instance", true, (int)MenuOrder.GameObject)]
         public static bool ValidateReplacePrefabInstanceMenuItem() {
             if (Selection.objects.Length == Selection.gameObjects.Length) {
                 GameObject prefab = GetPrefabOnly(Selection.gameObjects);
@@ -18,7 +18,7 @@ namespace CoreUtils.Editor {
             return false;
         }
 
-        [MenuItem("Tools/CoreUtils/Replace Prefab Instance %&r", false, (int) MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Replace Prefab Instance %&r", false, (int)MenuOrder.GameObject)]
         public static void ReplacePrefabInstanceMenuItem() {
             if (Selection.objects.Length == Selection.gameObjects.Length) {
                 GameObject prefab = GetPrefabOnly(Selection.gameObjects);
@@ -36,13 +36,17 @@ namespace CoreUtils.Editor {
                     foreach (GameObject go in sceneObjects) {
                         Transform parent = go.transform.parent;
                         GameObject instance = null;
+                        int siblingIndex = go.transform.GetSiblingIndex();
+
                         if (parent != null) {
                             instance = PrefabUtility.InstantiatePrefab(prefab, parent) as GameObject;
                         } else {
                             instance = PrefabUtility.InstantiatePrefab(prefab, go.scene) as GameObject;
                         }
 
+
                         if (instance != null) {
+                            instance.transform.SetSiblingIndex(siblingIndex);
                             instance.transform.localPosition = go.transform.localPosition;
                             instance.transform.localRotation = go.transform.localRotation;
                             instance.transform.localScale = go.transform.localScale;
