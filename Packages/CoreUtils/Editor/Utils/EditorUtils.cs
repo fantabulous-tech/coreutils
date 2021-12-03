@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using CoreUtils.GameVariables;
@@ -334,7 +335,8 @@ namespace CoreUtils.Editor {
         [MenuItem("Tools/CoreUtils/Save Project Shortcut %&#s", priority = (int)MenuOrder.Command)]
         public static void SaveProject() {
             AssetDatabase.SaveAssets();
-            Debug.Log("Project saved.");
+            string path = Application.dataPath;
+            Debug.Log($"{path.Substring(path.LastIndexOf('/'))}: Project saved.");
         }
 
         public static IEnumerable<AnimatorState> GetStateNames(Animator animator) {
