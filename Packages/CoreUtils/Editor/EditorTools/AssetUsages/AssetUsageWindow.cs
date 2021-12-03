@@ -13,13 +13,13 @@ namespace CoreUtils.Editor.AssetUsages {
 
         public static AssetUsageWindow Instance => UnityUtils.GetOrSet(ref s_Instance, () => GetWindow<AssetUsageWindow>(kWindowName));
 
-        [MenuItem("Assets/Find All Uses in Project", true, (int) MenuOrder.Usages)]
+        [MenuItem("Assets/Find All Uses in Project", true, (int)MenuOrder.Usages)]
         private static bool OpenEnabled() => !CoreUtilsSettings.DisableAssetGuidDatabase && Selection.objects.Length > 0;
 
-        [MenuItem("Assets/Find All Uses in Project", false, (int) MenuOrder.Usages)]
+        [MenuItem("Assets/Find All Uses in Project", false, (int)MenuOrder.Usages)]
         private static void Open() {
             Instance.Show();
-            Instance.m_SelectedObjects = Selection.objects;
+            Instance.SelectionChanged(Selection.objects);
         }
 
         [SerializeField] private Object[] m_SelectedObjects;
@@ -32,7 +32,7 @@ namespace CoreUtils.Editor.AssetUsages {
             SelectionChanged(m_SelectedObjects, true);
         }
 
-        [MenuItem("Tools/CoreUtils/Asset Usages Window", false, (int) MenuOrder.Window)]
+        [MenuItem("Tools/CoreUtils/Asset Usages Window", false, (int)MenuOrder.Window)]
         public static void OpenWindow() => Instance.Show();
 
         private static UsageInfo GetUsageInfo(Object[] objects) => objects != null && objects.Length > 0 ? new UsageInfo(objects) : null;
@@ -163,7 +163,7 @@ namespace CoreUtils.Editor.AssetUsages {
         }
 
         private static void SetSearchFilter(Object obj) {
-            SearchableEditorWindow[] windows = (SearchableEditorWindow[]) Resources.FindObjectsOfTypeAll(typeof(SearchableEditorWindow));
+            SearchableEditorWindow[] windows = (SearchableEditorWindow[])Resources.FindObjectsOfTypeAll(typeof(SearchableEditorWindow));
             SearchableEditorWindow hierarchy = windows.FirstOrDefault(window => window.GetType().ToString() == "UnityEditor.SceneHierarchyWindow");
 
             if (hierarchy == null) {
