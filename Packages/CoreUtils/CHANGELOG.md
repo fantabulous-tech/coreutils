@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.0.22] - 2021-12-03
+
+### Changed
+- 'Save Project' shortcut will now show the project's path when it logs the save.
+- Replace Prefab Instance will now maintain the replacement's sibling index
+
+### Fixed
+- Asset Usages window now properly auto-selects the currently selected project files.
+
+
+
 ## [1.0.21] - 2021-11-27
 
 ### Added
@@ -206,7 +217,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CoreUtils package
 
 
-[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.21...HEAD
+[Unreleased]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.22...HEAD
+[1.0.21]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.21...v1.0.22
 [1.0.21]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.20...v1.0.21
 [1.0.20]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.19...v1.0.20
 [1.0.19]: https://github.com/fantabulous-tech/coreutils/compare/v1.0.18...v1.0.19
