@@ -79,6 +79,12 @@ namespace CoreUtils.AssetBuckets {
         public static bool FindReferences(BaseAssetBucket bucket, string[] sourcePaths = null, bool skipIfUnchanged = false) {
             sourcePaths = sourcePaths ?? bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
 
+            bucket.EDITOR_Clear();
+
+            if (sourcePaths.Length == 0) {
+                return false;
+            }
+
             string filter = bucket.AssetSearchType.IsSubclassOf(typeof(Component)) ? "t:GameObject" : "t:" + bucket.AssetSearchType.Name;
 
             string[] newPaths = AssetDatabase
@@ -98,7 +104,6 @@ namespace CoreUtils.AssetBuckets {
                 return false;
             }
 
-            bucket.EDITOR_Clear();
             bucket.EDITOR_ForceAdd(new HashSet<Object>(newObjects));
             bucket.EDITOR_Sort(AssetGuidSorter);
             EditorUtility.SetDirty(bucket);
