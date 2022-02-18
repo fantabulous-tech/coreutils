@@ -5,15 +5,17 @@ Structural systems and tools that make using Unity easier and more productive.
 
 ## Editor Tools
 
+![image](https://user-images.githubusercontent.com/73082145/154618583-0c86a12c-9a98-4909-920b-8f01e18f92a8.png)
+
 ### Asset Dragnet
 
-`Window > Asset Dragnet`
+`Tools > CoreUtils > Asset Dragnet Window`
 
 System for batch-renaming files based on Regex searches.
 
 ### Asset Usages
 
-`Window > Asset Usages`
+`Tools > CoreUtils > Asset Usages Window`
 
 `Project Window > Right-click Asset > Find All Uses in Project`
 
@@ -36,23 +38,23 @@ Quickly sets up an editor for the component.
 
 ### Delete Empty Folders
 
-`Tools > Delete Empty Folders`
+`Tools > CoreUtils > Delete Empty Folders`
 
 Removes any empty folders and their associated .meta files.
 
 ### Find Missing Scripts
 
-`Window > Find Missing Scripts`
+`Tools > CoreUtils > Find Missing Scripts`
 
 A window that helps track down missing components. (Broken/renamed/re-GUID scripts on objects.)
 
 ### Group/Ungroup Selected
 
-`GameObject > Group Selected (Ctrl+G)`
+`Tools > CoreUtils > Group Selected (Ctrl+G)`
 
 Takes all objects selected in the hierarchy and groups them under a new GameObject.
 
-`GameObject > Ungroup Selected (Ctrl+Shift+G)`
+`Tools > CoreUtils > Ungroup Selected (Ctrl+Shift+G)`
 
 Takes the selected game object and removes it, leaving the children in place.
 
@@ -60,19 +62,19 @@ NOTE: Grouping sometimes creates issues with RectTransforms.
 
 ### Instant Screenshot
 
-`Tools > Instant High-Res Screenshot`
+`Tools > CoreUtils > Instant High-Res Screenshot Window`
 
 A window that allows you to quickly take screenshots at any resolution on any camera. (Works in editor mode and play mode.)
 
 ### Object Bookmark Window
 
-`Window > Object Bookmarks`
+`Tools > CoreUtils > Object Bookmarks Window`
 
 A conveniant window to bookmark scene and project object references and allow them to be quickly re-selected and opened.
 
 ### Replace Prefab Instance
 
-`Tools > Replace Prefab Instance (Ctrl+Alt+R)`
+`Tools > CoreUtils > Replace Prefab Instance (Ctrl+Alt+R)`
 
 A way to quickly replace game objects with a replacement prefab while maintaining the object's position and rotation.
 
@@ -80,7 +82,7 @@ NOTE: Both a GameObject in the Hierarchy Window and a Prefab in the Project Wind
 
 ### Transcribe Components Wizard
 
-`Tools > Transcribe Components`
+`Tools > CoreUtils > Transcribe Components Window`
 
 Transcribes components from one object to another including components in the hierarchy and optionally creating missing game objects along the way. Also transcribes the local references of the components.
 
@@ -88,7 +90,7 @@ This is especially useful for copying components added on one complex .fbx hiera
 
 ### Zero Selected
 
-`GameObject > Zero Selected`
+`Tools > CoreUtils > Zero Selected`
 
 Resets position and rotation of the selected game object to zero without moving the children. There's also a 'Zero Selected to Children Center' that centers the object on the boundaries of the child objects.
 
@@ -99,7 +101,7 @@ NOTE: Sometimes has issues with rotation and RectTransforms
 
 ### Asset Buckets
 
-`Create Menu > Buckets > ...`
+`Create Menu > CoreUtils > Buckets > ...`
 
 A system for auto-adding assets to a ScriptableObject based on the project's folder structure. The bucket can then be easily referenced by different systems to access those assets without relying on Resource folders.
 
@@ -111,9 +113,9 @@ A system for chaining delay timers (seconds or frames) and waiting for testable 
 
 ### GameEvents and GameVariables
 
-`Create Menu > Game Events > ...`
+`Create Menu > CoreUtils > Game Events > ...`
 
-`Create Menu > Game Variables > ...`
+`Create Menu > CoreUtils > Game Variables > ...`
 
 A system for creating generic events and variables as ScriptableObjects that can be referenced by systems that don't know about one another. This is the glue that can quickly connect various components across loading/unloading scenes and prefabs.
 
