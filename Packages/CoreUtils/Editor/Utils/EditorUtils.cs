@@ -336,7 +336,7 @@ namespace CoreUtils.Editor {
         public static void SaveProject() {
             AssetDatabase.SaveAssets();
             string path = Application.dataPath;
-            Debug.Log($"{path.Substring(path.LastIndexOf('/'))}: Project saved.");
+            Debug.Log($"{path.Substring(0, path.LastIndexOf('/'))}: Project saved.");
         }
 
         public static IEnumerable<AnimatorState> GetStateNames(Animator animator) {

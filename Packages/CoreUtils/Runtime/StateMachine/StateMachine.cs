@@ -7,7 +7,7 @@ namespace CoreUtils {
         [SerializeField] private GameObject m_DefaultState;
 
         [Tooltip("Should log messages be thrown during usage?")]
-        [SerializeField] private bool m_Verbose = true;
+        [SerializeField] private bool m_Verbose;
 
         [Tooltip("Can States within this StateMachine be reentered?")]
         [SerializeField] private bool m_AllowReentry;
@@ -75,6 +75,7 @@ namespace CoreUtils {
                 ChangeState(0);
                 return;
             }
+
             int currentIndex = CurrentState.transform.GetSiblingIndex();
             if (currentIndex != transform.childCount - 1) {
                 ChangeState(++currentIndex);
@@ -88,10 +89,12 @@ namespace CoreUtils {
                 ChangeState(0);
                 return;
             }
+
             int currentIndex = CurrentState.transform.GetSiblingIndex();
             if (currentIndex == 0) {
                 return;
             }
+
             ChangeState(--currentIndex);
         }
 
@@ -106,6 +109,7 @@ namespace CoreUtils {
                 foreach (Transform item in transform) {
                     item.gameObject.SetActive(false);
                 }
+
                 return;
             }
 
@@ -125,6 +129,10 @@ namespace CoreUtils {
             CurrentState.SetActive(false);
             OnStateExited?.Invoke(CurrentState);
             m_CurrentState = null;
+        }
+
+        public void SetDefaultState(string stateName) {
+            m_DefaultState = FindTransform(stateName).gameObject;
         }
 
         public void ChangeState(int childIndex) {
@@ -154,6 +162,7 @@ namespace CoreUtils {
                 foreach (Transform item in transform) {
                     item.gameObject.SetActive(item.gameObject == state);
                 }
+
                 return;
             }
 
@@ -205,7 +214,7 @@ namespace CoreUtils {
             if (index == transform.childCount - 1) {
                 OnLastStateEntered?.Invoke();
             }
-            
+
             m_CurrentState.SetActive(true);
 
             Log($"(+) {name} ENTERED state: {state.name}");

@@ -5,6 +5,7 @@ using UnityEngine;
 namespace CoreUtils.Editor {
     public static class ReplacePrefabInstance {
         [MenuItem("Tools/CoreUtils/Replace Prefab Instance", true, (int)MenuOrder.GameObject)]
+        [MenuItem("Tools/CoreUtils/Append Prefab Instance", true, (int)MenuOrder.GameObject)]
         public static bool ValidateReplacePrefabInstanceMenuItem() {
             if (Selection.objects.Length == Selection.gameObjects.Length) {
                 GameObject prefab = GetPrefabOnly(Selection.gameObjects);
@@ -20,53 +21,65 @@ namespace CoreUtils.Editor {
 
         [MenuItem("Tools/CoreUtils/Replace Prefab Instance %&r", false, (int)MenuOrder.GameObject)]
         public static void ReplacePrefabInstanceMenuItem() {
-            if (Selection.objects.Length == Selection.gameObjects.Length) {
-                GameObject prefab = GetPrefabOnly(Selection.gameObjects);
-                GameObject[] sceneObjects = GetSceneObjectsOnly(Selection.gameObjects);
+            ReplacePrefab(true);
+        }
 
-                if (prefab != null && sceneObjects.Length > 0 && sceneObjects.Length == Selection.gameObjects.Length - 1) {
-                    List<GameObject> toDestroy = new List<GameObject>();
-                    List<Object> newSelection = new List<Object>();
+        [MenuItem("Tools/CoreUtils/Append Prefab Instance %&#r", false, (int)MenuOrder.GameObject)]
+        public static void AppendPrefabInstanceMenuItem() {
+            ReplacePrefab(false);
+        }
 
-                    newSelection.Add(prefab);
+        private static void ReplacePrefab(bool deleteReplacement) {
+            if (Selection.objects.Length != Selection.gameObjects.Length) {
+                return;
+            }
 
-                    Undo.SetCurrentGroupName(string.Format("Replace {0} objects with {1}", sceneObjects.Length, prefab.name));
-                    int undoGroupIndex = Undo.GetCurrentGroup();
+            GameObject prefab = GetPrefabOnly(Selection.gameObjects);
+            GameObject[] sceneObjects = GetSceneObjectsOnly(Selection.gameObjects);
 
-                    foreach (GameObject go in sceneObjects) {
-                        Transform parent = go.transform.parent;
-                        GameObject instance = null;
-                        int siblingIndex = go.transform.GetSiblingIndex();
+            if (prefab == null || sceneObjects.Length == 0 || sceneObjects.Length != Selection.gameObjects.Length - 1) {
+                return;
+            }
 
-                        if (parent != null) {
-                            instance = PrefabUtility.InstantiatePrefab(prefab, parent) as GameObject;
-                        } else {
-                            instance = PrefabUtility.InstantiatePrefab(prefab, go.scene) as GameObject;
-                        }
+            List<GameObject> toDestroy = new List<GameObject>();
+            List<Object> newSelection = new List<Object> { prefab };
 
+            Undo.SetCurrentGroupName($"Replace {sceneObjects.Length} objects with {prefab.name}");
+            int undoGroupIndex = Undo.GetCurrentGroup();
 
-                        if (instance != null) {
-                            instance.transform.SetSiblingIndex(siblingIndex);
-                            instance.transform.localPosition = go.transform.localPosition;
-                            instance.transform.localRotation = go.transform.localRotation;
-                            instance.transform.localScale = go.transform.localScale;
-                            Undo.RegisterCreatedObjectUndo(instance, "Instantiated replacement prefab");
-                            toDestroy.Add(go);
-                            newSelection.Add(instance);
-                        } else {
-                            Debug.LogWarningFormat(go, "Failed to Replace {0} with {1}", go.name, prefab.name);
-                        }
-                    }
+            foreach (GameObject go in sceneObjects) {
+                Transform parent = go.transform.parent;
+                GameObject instance = null;
+                int siblingIndex = go.transform.GetSiblingIndex();
 
-                    foreach (GameObject go in toDestroy) {
-                        Undo.DestroyObjectImmediate(go);
-                    }
+                if (parent != null) {
+                    instance = PrefabUtility.InstantiatePrefab(prefab, parent) as GameObject;
+                } else {
+                    instance = PrefabUtility.InstantiatePrefab(prefab, go.scene) as GameObject;
+                }
 
-                    Undo.CollapseUndoOperations(undoGroupIndex);
-
-                    Selection.objects = newSelection.ToArray();
+                if (instance != null) {
+                    instance.transform.SetSiblingIndex(siblingIndex + 1);
+                    instance.transform.localPosition = go.transform.localPosition;
+                    instance.transform.localRotation = go.transform.localRotation;
+                    instance.transform.localScale = go.transform.localScale;
+                    Undo.RegisterCreatedObjectUndo(instance, "Instantiated replacement prefab");
+                    toDestroy.Add(go);
+                    newSelection.Add(instance);
+                } else {
+                    Debug.LogWarningFormat(go, "Failed to Replace {0} with {1}", go.name, prefab.name);
                 }
             }
+
+            if (deleteReplacement) {
+                foreach (GameObject go in toDestroy) {
+                    Undo.DestroyObjectImmediate(go);
+                }
+            }
+
+            Undo.CollapseUndoOperations(undoGroupIndex);
+
+            Selection.objects = newSelection.ToArray();
         }
 
         //Returns a single prefab if and only if it is the only one in the selection

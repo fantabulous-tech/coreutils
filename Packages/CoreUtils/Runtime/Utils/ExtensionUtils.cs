@@ -27,6 +27,30 @@ namespace CoreUtils {
             return Mathf.Abs(a.x - b.x) < epsilon && Mathf.Abs(a.y - b.y) < epsilon && Mathf.Abs(a.z - b.z) < epsilon && Mathf.Abs(a.w - b.w) < epsilon;
         }
 
+        public static bool Approximately(this Matrix4x4 a, Matrix4x4 b) {
+            for (var i = 0; i < 16; i++)
+            {
+                if (!Mathf.Approximately(a[i], b[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static bool Approximately(this Matrix4x4 a, Matrix4x4 b, float epsilon) {
+            for (var i = 0; i < 16; i++)
+            {
+                if (!Approximately(a[i], b[i], epsilon))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool Approximately(this float a, float b) {
             return Mathf.Approximately(a, b);
         }
@@ -308,10 +332,10 @@ namespace CoreUtils {
 
         public static Color32 ToColor32(this int i) {
             Color32 c = new Color32();
-            c.r = (byte) (i >> 0 & 0xff);
-            c.g = (byte) (i >> 8 & 0xff);
-            c.b = (byte) (i >> 16 & 0xff);
-            c.a = (byte) (255 - (i >> 24 & 0xff));
+            c.r = (byte)(i >> 0 & 0xff);
+            c.g = (byte)(i >> 8 & 0xff);
+            c.b = (byte)(i >> 16 & 0xff);
+            c.a = (byte)(255 - (i >> 24 & 0xff));
             return c;
         }
     }
