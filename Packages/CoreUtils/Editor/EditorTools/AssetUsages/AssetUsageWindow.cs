@@ -33,13 +33,9 @@ namespace CoreUtils.Editor.AssetUsages {
         }
 
         [MenuItem("Tools/CoreUtils/Asset Usages Window", false, (int)MenuOrder.Window)]
-        public static void OpenWindow() {
-            Instance.Show();
-        }
+        public static void OpenWindow() => Instance.Show();
 
-        private static UsageInfo GetUsageInfo(Object[] objects) {
-            return objects != null && objects.Length > 0 ? new UsageInfo(objects) : null;
-        }
+        private static UsageInfo GetUsageInfo(Object[] objects) => objects != null && objects.Length > 0 ? new UsageInfo(objects) : null;
 
         private void OnEnable() {
             GuidDataService.Init();
@@ -91,9 +87,7 @@ namespace CoreUtils.Editor.AssetUsages {
             s_LastInfo?.OnGUI();
         }
 
-        private void SelectionChanged(Object[] selection) {
-            SelectionChanged(selection, false);
-        }
+        private void SelectionChanged(Object[] selection) => SelectionChanged(selection, false);
 
         private void SelectionChanged(Object[] selection, bool force) {
             Object[] oldSelection = m_SelectedObjects;
@@ -154,13 +148,9 @@ namespace CoreUtils.Editor.AssetUsages {
             return path.IsNullOrEmpty() ? null : AssetDatabase.LoadAssetAtPath<Object>(path);
         }
 
-        private void GoBack() {
-            Selection.objects = m_GoBackStack.LastOrDefault();
-        }
+        private void GoBack() => Selection.objects = m_GoBackStack.LastOrDefault();
 
-        private void GoForward() {
-            Selection.objects = m_GoForwardStack.LastOrDefault();
-        }
+        private void GoForward() => Selection.objects = m_GoForwardStack.LastOrDefault();
 
         // Special version that will pop again if it finds a null result. (e.g. the object has been deleted)
         private static void Pop<T>(IList<T> list) where T : class {

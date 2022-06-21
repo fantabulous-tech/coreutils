@@ -32,4 +32,9 @@ namespace CoreUtils.Editor.AssetUsages {
             return $"[File: Guid={Guid}, Path={Path}]";
         }
     }
+
+    public class FileEntryCount : FileEntry {
+        [UsedImplicitly]
+        public int ReferenceCount { get; set; }
+    }
 }

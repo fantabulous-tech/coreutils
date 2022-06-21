@@ -282,6 +282,16 @@ ORDER BY FileEntry.Path ASC
 ;").Where(f => !guids.Contains(f.Guid)).ToList();
         }
 
+        public static List<FileEntryCount> GetFileReferences() {
+            return Connection.Query<FileEntryCount>($@"
+SELECT FileEntry.*, COUNT(UsageEntry.ResourceGuid) as ReferenceCount
+FROM FileEntry
+    JOIN UsageEntry ON FileEntry.Guid = UsageEntry.ResourceGuid
+GROUP BY FileEntry.Guid
+ORDER BY ReferenceCount DESC
+;").ToList();
+        }
+
         private static void RaiseUpdated(AssetChanges changes = new AssetChanges()) {
             Updated?.Invoke(changes);
         }
