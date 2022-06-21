@@ -8,25 +8,26 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace CoreUtils.AssetBuckets {
-    [CustomEditor(typeof(BaseAssetBucket), true)]
-    public class AssetBucketEditor : Editor<BaseAssetBucket> {
+    [CustomEditor(typeof(BaseAssetReferenceBucket), true)]
+    public class AssetRefBucketEditor : Editor<BaseAssetReferenceBucket> {
         private const int kMinColumnWidth = 100;
 
         private float m_IDColumnWidth;
+        private float m_EditColumnWidth;
         private float m_SourceObjectColumnWidth;
-        protected float m_AssetObjectColumnWidth;
-        private readonly List<AssetListItem> m_Duplicates = new List<AssetListItem>();
-        private AssetListItem[] m_SourceItems = { };
-        private AssetListItem[] m_AssetItems = { };
+        private readonly List<AssetRefListItem> m_Duplicates = new List<AssetRefListItem>();
+        private AssetSourceListItem[] m_SourceItems = { };
+        private AssetRefListItem[] m_AssetItems = { };
         private int m_ShowAssets = -1;
         private Vector2 m_SourceScrollPos;
         private Vector2 m_AssetScrollPos;
 
         private string ShowAssetsKey => Target.name + "_ShowAssets";
 
-        private float SourceObjectColumnWidth => GetOrSetFloat(ref m_SourceObjectColumnWidth, () => GetFieldWidth(m_SourceItems, i => i.GetObjectFieldWidth()));
-        private float IDColumnWidth => GetOrSetFloat(ref m_IDColumnWidth, () => GetFieldWidth(m_AssetItems, i => i.GetNameFieldWidth()));
-        public float AssetObjectColumnWidth => GetOrSetFloat(ref m_AssetObjectColumnWidth, () => GetFieldWidth(m_AssetItems, i => i.GetObjectFieldWidth()));
+        private float SourceObjectColumnWidth => GetOrSetFloat(ref m_SourceObjectColumnWidth, () => GetFieldWidth(m_SourceItems, i => i.GetFieldWidth()));
+        private float IDColumnWidth => GetOrSetFloat(ref m_IDColumnWidth, () => GetFieldWidth(m_AssetItems, i => i.GetFieldWidth()));
+
+        private float EditColumnWidth => GetOrSetFloat(ref m_EditColumnWidth, () => EditorStyles.boldLabel.CalcSize(new GUIContent("Edit")).x);
 
         private bool ShowAssets {
             get => EditorUtils.GetEditorPrefBool(ref m_ShowAssets, ShowAssetsKey);
@@ -95,8 +96,8 @@ namespace CoreUtils.AssetBuckets {
             wasEnabled = GUI.enabled;
             GUI.enabled = true;
 
-            if (GUILayout.Button("Force Refresh")) {
-                if (!AssetBucketWatcher.FindReferences(Target, null, true)) {
+            if (GUILayout.Button(new GUIContent("Force Refresh", "Clear the bucket and recheck every single file in the above folders to see if they can be added."))) {
+                if (!AssetBucketWatcher.FindReferences(Target, forceRefresh: true)) {
                     Debug.Log($"<color=#6699cc>AssetBuckets</color>: No updates needed for {Target.name}", Target);
                 } else {
                     Repaint();
@@ -108,12 +109,12 @@ namespace CoreUtils.AssetBuckets {
             if (m_Duplicates.Any()) {
                 EditorGUILayout.HelpBox("Asset name collision found. Assets are loaded from buckets by name, so all names should be unique.", MessageType.Warning);
                 GUILayout.BeginHorizontal();
+                GUILayout.Label("Edit", EditorStyles.boldLabel, GUILayout.Width(EditColumnWidth));
                 GUILayout.Label("ID", EditorStyles.boldLabel, GUILayout.Width(IDColumnWidth));
-                GUILayout.Label("Name Collision Asset", EditorStyles.boldLabel, GUILayout.Width(AssetObjectColumnWidth));
                 GUILayout.Label("Location", EditorStyles.boldLabel);
                 GUILayout.EndHorizontal();
 
-                m_Duplicates.ForEach(i => i.OnAssetGUI(IDColumnWidth, AssetObjectColumnWidth));
+                m_Duplicates.ForEach(OnAssetGUI);
             }
 
             EditorGUILayout.Space();
@@ -124,8 +125,8 @@ namespace CoreUtils.AssetBuckets {
 
             if (ShowAssets) {
                 GUILayout.BeginHorizontal();
+                GUILayout.Label("Edit", EditorStyles.boldLabel, GUILayout.Width(EditColumnWidth));
                 GUILayout.Label("ID", EditorStyles.boldLabel, GUILayout.Width(IDColumnWidth));
-                GUILayout.Label("Asset", EditorStyles.boldLabel, GUILayout.Width(AssetObjectColumnWidth));
                 GUILayout.Label("Location", EditorStyles.boldLabel);
                 GUILayout.EndHorizontal();
 
@@ -135,21 +136,20 @@ namespace CoreUtils.AssetBuckets {
             EditorGUILayout.EndScrollView();
         }
 
-        protected virtual void OnAssetGUI(AssetListItem item) => item.OnAssetGUI(IDColumnWidth, AssetObjectColumnWidth);
+        protected virtual void OnAssetGUI(AssetRefListItem item) => item.OnAssetGUI(IDColumnWidth, EditColumnWidth);
 
         private void OnUndoRedoPerformed() => OnSourceItemsUpdated();
 
         private void OnBucketUpdated() {
-            m_AssetItems = Target.EDITOR_Objects
-                .Select((a, i) => new AssetListItem(a, Target.EDITOR_GetAssetName(a), Target.AssetType, i))
+            m_AssetItems = Target.AssetRefs
+                .Select(a => new AssetRefListItem(a, Target.AssetType))
                 .OrderBy(o => o.Name, StringComparer.OrdinalIgnoreCase)
                 .ToArray();
 
-            m_AssetObjectColumnWidth = -1;
             m_Duplicates.Clear();
-            AssetListItem lastItem = null;
+            AssetRefListItem lastItem = null;
 
-            foreach (AssetListItem item in m_AssetItems) {
+            foreach (AssetRefListItem item in m_AssetItems) {
                 if (lastItem != null && item.Name.Equals(lastItem.Name, StringComparison.OrdinalIgnoreCase)) {
                     if (!m_Duplicates.Contains(lastItem)) {
                         m_Duplicates.Add(lastItem);
@@ -171,9 +171,9 @@ namespace CoreUtils.AssetBuckets {
             OnBucketUpdated();
         }
 
-        private void RefreshSourceItemList() => m_SourceItems = Target.EDITOR_Sources?.Select((a, i) => new AssetListItem(a, a ? a.name : "", typeof(Object), i)).ToArray() ?? new AssetListItem[0];
+        private void RefreshSourceItemList() => m_SourceItems = Target.EDITOR_Sources?.Select((a, i) => new AssetSourceListItem(a, a ? a.name : "", typeof(Object), i)).ToArray() ?? new AssetSourceListItem[0];
 
-        private static float GetFieldWidth(IReadOnlyCollection<AssetListItem> items, Func<AssetListItem, float> getItemWidth) {
+        private static float GetFieldWidth(IReadOnlyCollection<IAssetListItem> items, Func<IAssetListItem, float> getItemWidth) {
             return Mathf.Max(items.Count > 0 ? items.Max(getItemWidth) : kMinColumnWidth, kMinColumnWidth);
         }
 
@@ -185,7 +185,12 @@ namespace CoreUtils.AssetBuckets {
             return floatRef;
         }
 
-        protected class AssetListItem {
+        protected interface IAssetListItem {
+
+            float GetFieldWidth();
+        }
+
+        protected class AssetSourceListItem : IAssetListItem {
             private readonly Object m_Item;
             private readonly Type m_Type;
             private readonly int m_Index;
@@ -194,7 +199,7 @@ namespace CoreUtils.AssetBuckets {
             public string Name => !m_Name.IsNullOrEmpty() ? m_Name : m_Item ? m_Item.name : $"None ({m_Type.Name})";
             public string DisplayPath { get; }
 
-            public AssetListItem(Object item, string name, Type type, int index) {
+            public AssetSourceListItem(Object item, string name, Type type, int index) {
                 m_Item = item;
                 m_Name = name;
                 m_Type = type;
@@ -207,7 +212,7 @@ namespace CoreUtils.AssetBuckets {
                 DisplayPath = path ?? " <null> ";
             }
 
-            public bool OnSourceGUI(float objectFieldWidth, BaseAssetBucket bucket) {
+            public bool OnSourceGUI(float objectFieldWidth, BaseAssetReferenceBucket bucket) {
                 GUILayout.BeginHorizontal();
 
                 Object newItem = EditorGUILayout.ObjectField(m_Item, m_Type, false, GUILayout.Width(objectFieldWidth));
@@ -234,23 +239,50 @@ namespace CoreUtils.AssetBuckets {
                 return changed;
             }
 
-            public void OnAssetGUI(float idFieldWidth, float objectFieldWidth) {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(m_Name, GUILayout.Width(idFieldWidth));
-                EditorGUILayout.ObjectField(m_Item, m_Type, false, GUILayout.Width(objectFieldWidth));
-                GUILayout.Label(DisplayPath);
-                GUILayout.EndHorizontal();
-            }
-
-            public float GetNameFieldWidth() {
-                return EditorStyles.boldLabel.CalcSize(new GUIContent(m_Name)).x;
-            }
-
-            public float GetObjectFieldWidth() {
+            public float GetFieldWidth() {
                 string name = m_Item == null || m_Item is GameObject ? m_Name : $"{m_Name} ({m_Item.GetType().Name})";
                 Vector2 size = EditorStyles.objectField.CalcSize(new GUIContent(name));
                 const int kObjectFieldAdjustment = -35;
                 return Mathf.Max(size.x + kObjectFieldAdjustment, kMinColumnWidth);
+            }
+        }
+
+        protected class AssetRefListItem : IAssetListItem {
+            private readonly LazyAssetReference m_Item;
+            private readonly Type m_Type;
+
+            public string Name => m_Item != null ? m_Item.Name : $"None ({m_Type.Name})";
+            public string DisplayPath { get; }
+
+            public AssetRefListItem(LazyAssetReference item, Type type) {
+                m_Item = item;
+                m_Type = type;
+                string path = AssetDatabase.GUIDToAssetPath(item.Guid);
+                int lastFolderIndex = path?.LastIndexOf('/') ?? -1;
+                path = path != null && lastFolderIndex >= 0
+                    ? path.Substring(0, path.LastIndexOf('/')).ReplaceRegex("^Assets/", "")
+                    : path;
+                DisplayPath = path ?? " <null> ";
+            }
+
+            public void OnAssetGUI(float idFieldWidth, float editFieldWidth) {
+                GUILayout.BeginHorizontal();
+
+                GUIStyle style = new GUIStyle(GUI.skin.button);
+                style.padding = new RectOffset(2, 2, 2, 2);
+				// icon size is 16x16 so with padding size is 20x20
+                if (GUILayout.Button(EditorGUIUtility.IconContent("editicon.sml", "Open Asset"), style, GUILayout.Height(20), GUILayout.Width(20))) {
+                    Selection.activeObject = m_Item.AssetRef.asset;
+                }
+
+                GUILayout.Label(Name, GUILayout.Width(idFieldWidth));              
+                
+                GUILayout.Label(DisplayPath);
+                GUILayout.EndHorizontal();
+            }
+
+            public float GetFieldWidth() {
+                return EditorStyles.boldLabel.CalcSize(new GUIContent(Name)).x;
             }
         }
     }

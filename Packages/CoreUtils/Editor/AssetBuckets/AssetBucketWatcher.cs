@@ -9,22 +9,41 @@ using Object = UnityEngine.Object;
 namespace CoreUtils.AssetBuckets {
     public static class AssetBucketWatcher {
         private static bool s_WillSaveAssets;
-        private static BaseAssetBucket[] s_Buckets;
-        private static string[] s_LastBuckets;
+        private static BaseAssetBucket[] s_AssetBuckets;
+        private static string[] s_LastAssetBuckets;
 
-        private static IEnumerable<BaseAssetBucket> Buckets {
+        private static BaseAssetReferenceBucket[] s_AssetRefBuckets;
+        private static string[] s_LastAssetRefBuckets;
+
+        private static IEnumerable<BaseAssetBucket> AssetBuckets {
             get {
                 string[] newBuckets = AssetDatabase.FindAssets($"t:{nameof(BaseAssetBucket)}");
 
-                if (s_LastBuckets == null || !newBuckets.IsEqual(s_LastBuckets)) {
-                    s_LastBuckets = newBuckets;
-                    s_Buckets = newBuckets
+                if (s_LastAssetBuckets == null || !newBuckets.IsEqual(s_LastAssetBuckets)) {
+                    s_LastAssetBuckets = newBuckets;
+                    s_AssetBuckets = newBuckets
                         .Select(AssetDatabase.GUIDToAssetPath)
                         .Select(AssetDatabase.LoadAssetAtPath<BaseAssetBucket>)
                         .ToArray();
                 }
 
-                return s_Buckets;
+                return s_AssetBuckets;
+            }
+        }
+
+        private static IEnumerable<BaseAssetReferenceBucket> AssetRefBuckets {
+            get {
+                string[] newBuckets = AssetDatabase.FindAssets($"t:{nameof(BaseAssetReferenceBucket)}");
+
+                if (s_LastAssetRefBuckets == null || !newBuckets.IsEqual(s_LastAssetRefBuckets)) {
+                    s_LastAssetRefBuckets = newBuckets;
+                    s_AssetRefBuckets = newBuckets
+                        .Select(AssetDatabase.GUIDToAssetPath)
+                        .Select(AssetDatabase.LoadAssetAtPath<BaseAssetReferenceBucket>)
+                        .ToArray();
+                }
+
+                return s_AssetRefBuckets;
             }
         }
 
@@ -39,51 +58,66 @@ namespace CoreUtils.AssetBuckets {
                 return;
             }
 
+            // don't run this code if we're compiling/building
+            if (EditorApplication.isCompiling || BuildPipeline.isBuildingPlayer) {
+                return;
+            }
+
             HashSet<string> changedDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             changes.Imported.ForEach(f => AddPath(f, changedDirectories));
             changes.Deleted.ForEach(f => AddPath(f, changedDirectories));
             changes.MovedFrom.ForEach(f => AddPath(f, changedDirectories));
             changes.MovedTo.ForEach(f => AddPath(f, changedDirectories));
 
-            Buckets.ForEach(b => FindReferencesIfChanged(b, changes, changedDirectories));
+            AssetBuckets.ForEach(b => FindReferencesIfChanged(b, changes, changedDirectories));
+            AssetRefBuckets.ForEach(b => FindReferencesIfChanged(b, changes, changedDirectories));
         }
 
         private static void FindReferencesIfChanged(BaseAssetBucket bucket, AssetChanges changes, HashSet<string> changedDirectories) {
-            // Skip if bucket is null.
-            if (!bucket) {
+            if (!HasChangedReferences(bucket, changes, changedDirectories)) {
                 return;
+            }
+
+            string[] sourcePaths = bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
+            FindReferences(bucket, sourcePaths, true);
+        }
+
+        private static void FindReferencesIfChanged(BaseAssetReferenceBucket bucket, AssetChanges changes, HashSet<string> changedDirectories) {
+            if (!HasChangedReferences(bucket, changes, changedDirectories)) {
+                return;
+            }
+
+            FindReferences(bucket, updatedFiles: changes.Imported);
+        }
+
+        private static bool HasChangedReferences<T>(T bucket, AssetChanges changes, HashSet<string> changedDirectories) where T : IAssetBucket {
+            // Skip if bucket is null.
+            if (bucket == null) {
+                return false;
             }
 
             // Skip if bucket is updated manually.
             if (bucket.ManualUpdate) {
-                return;
+                return false;
             }
 
             // Skip if no source paths are in the changed directories.
-            string[] sourcePaths = bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
-
             if (changedDirectories != null && !changedDirectories.Any(bucket.EDITOR_IsValidDirectory)) {
-                return;
+                return false;
             }
 
             // Skip if all imported files already exist in the bucket or can't be added to the bucket.
             if (changes.MovedFrom.Length == 0 && changes.MovedTo.Length == 0 && changes.Deleted.Length == 0 && changes.Imported.Length < 50) {
-                if (!changes.Imported.Any(bucket.EDITOR_IsMissing)) {
-                    return;
+                if (!changes.Imported.Any(bucket.EDITOR_IsMissingOrInvalid)) {
+                    return false;
                 }
             }
 
-            FindReferences(bucket, sourcePaths, true);
+            return true;
         }
 
         public static bool FindReferences(BaseAssetBucket bucket, string[] sourcePaths = null, bool skipIfUnchanged = false) {
             sourcePaths = sourcePaths ?? bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
-
-            bucket.EDITOR_Clear();
-
-            if (sourcePaths.Length == 0) {
-                return false;
-            }
 
             string filter = bucket.AssetSearchType.IsSubclassOf(typeof(Component)) ? "t:GameObject" : "t:" + bucket.AssetSearchType.Name;
 
@@ -93,7 +127,7 @@ namespace CoreUtils.AssetBuckets {
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => CanBeType(p, bucket.AssetSearchType))
                 .ToArray();
-
+            
             List<Object> newObjects = newPaths
                 .Select(p => AssetDatabase.LoadAssetAtPath(p, bucket.AssetSearchType))
                 .Where(o => o && bucket.EDITOR_CanAdd(o))
@@ -102,14 +136,69 @@ namespace CoreUtils.AssetBuckets {
             // Skip if the new object list is the same as the existing bucket objects.
             if (skipIfUnchanged && BucketIsUnchanged(bucket, newObjects)) {
                 return false;
-            }
+            }            
 
-            bucket.EDITOR_ForceAdd(new HashSet<Object>(newObjects));
+            bucket.EDITOR_Clear();
+            bucket.EDITOR_ForceAdd(newObjects);
             bucket.EDITOR_Sort(AssetGuidSorter);
             EditorUtility.SetDirty(bucket);
             SaveAssetsDelayed();
             Debug.Log($"<color=#6699cc>AssetBuckets</color>: Updated {bucket.name}", bucket);
             return true;
+        }
+
+        public static bool FindReferences(BaseAssetReferenceBucket bucket, string[] updatedFiles = null, bool forceRefresh = false) {
+            string[] sourcePaths = bucket.EDITOR_Sources.Where(o => o).Select(AssetDatabase.GetAssetPath).ToArray();
+
+            string filter = bucket.AssetSearchType.IsSubclassOf(typeof(Component)) ? "t:GameObject" : "t:" + bucket.AssetSearchType.Name;
+
+            List<string> updatedGuids;
+
+            if (sourcePaths.Length == 0) {
+                updatedGuids = new List<string>();
+            }
+            else {
+                updatedGuids = AssetDatabase
+                .FindAssets(filter, sourcePaths)
+                .OrderBy(guid => guid)
+                .ToList();
+            }
+
+            List<string> bucketGuids = bucket.EDITOR_Guids;
+            List<string> removedGuids = forceRefresh ? bucketGuids : bucketGuids.Except(updatedGuids).ToList();
+            List<string> newGuids = forceRefresh ? updatedGuids : updatedGuids.Except(bucketGuids).ToList();
+
+            if (!forceRefresh) {
+                newGuids = newGuids.Except(bucket.IgnoredGuids).ToList();
+            }
+            else {
+                bucket.IgnoredGuids = new List<string>();
+            }
+
+            bool bucketUpdated = false;
+
+            if (removedGuids.Count != 0) {
+                bucket.EDITOR_Remove(removedGuids);
+                bucketUpdated = true;
+            }
+
+            if (newGuids.Count != 0) {
+                bucketUpdated |= bucket.EDITOR_TryAdd(newGuids);
+            }
+
+            if (!forceRefresh) {
+                bucketUpdated |= bucket.EDITOR_UpdateAssets(updatedFiles);
+            }            
+
+            if (bucketUpdated) {
+                bucket.EDITOR_Sort();
+                EditorUtility.SetDirty(bucket);
+                SaveAssetsDelayed();
+                Debug.Log($"<color=#6699cc>AssetBuckets</color>: Updated {bucket.name}", bucket);
+                return true;
+            }
+
+            return false;            
         }
 
         private static bool BucketIsUnchanged(BaseAssetBucket bucket, List<Object> newObjects) {

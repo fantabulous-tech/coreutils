@@ -8,7 +8,7 @@ using UnityEditor;
 #endif
 
 namespace CoreUtils.AssetBuckets {
-    public abstract class BaseAssetBucket : BaseBucket {
+    public abstract class BaseAssetBucket : BaseBucket, IAssetBucket {
         [SerializeField] private List<Object> m_Sources;
         [SerializeField] private List<AssetReference> m_AssetRefs;
         [SerializeField] private bool m_ManualUpdate;
@@ -44,8 +44,8 @@ namespace CoreUtils.AssetBuckets {
         public abstract void EDITOR_Sort(Comparison<Object> comparer);
         public abstract bool EDITOR_CanAdd(Object asset);
         public abstract void EDITOR_TryAdd(Object asset);
-        public abstract void EDITOR_ForceAdd(HashSet<Object> newObjects);
-        public abstract bool EDITOR_IsMissing(string path);
+        public abstract void EDITOR_ForceAdd(List<Object> newObjects);
+        public abstract bool EDITOR_IsMissingOrInvalid(string path);
         public abstract string EDITOR_GetAssetName(Object asset);
 
         public bool EDITOR_IsValidDirectory(string path) {
@@ -91,7 +91,7 @@ namespace CoreUtils.AssetBuckets {
             AssetRefs.Clear();
         }
 
-        public override bool EDITOR_IsMissing(string path) {
+        public override bool EDITOR_IsMissingOrInvalid(string path) {
             // If this is an invalid path, then this path isn't missing.
             if (!EDITOR_IsValidDirectory(path)) {
                 return false;
@@ -99,14 +99,16 @@ namespace CoreUtils.AssetBuckets {
 
             // If the guid already exists, then this path isn't missing.
             string guid = AssetDatabase.AssetPathToGUID(path);
-            if (AssetRefs.Any(r => r.Guid != null && r.Guid.Equals(guid))) {
-                return false;
-            }
 
-            // We now have a valid path and a missing guid, so we should load and test the asset itself.
-            // If we can add the asset, then this path is missing.
             T asset = AssetDatabase.LoadAssetAtPath<T>(path);
-            return EDITOR_CanAdd(asset);
+
+            // If we have this asset, check to see if it has become invalid
+            if (AssetRefs.Any(r => r.Guid != null && r.Guid.Equals(guid))) {
+                return !EDITOR_CanAdd(asset);
+            } else {
+                // we don't have this asset, check if we should add it
+                return EDITOR_CanAdd(asset);
+            }
         }
 
         public override string EDITOR_GetAssetName(Object asset) {
@@ -143,7 +145,7 @@ namespace CoreUtils.AssetBuckets {
             }
         }
 
-        public override void EDITOR_ForceAdd(HashSet<Object> newObjects) {
+        public override void EDITOR_ForceAdd(List<Object> newObjects) {
             foreach (Object asset in newObjects) {
                 string path = AssetDatabase.GetAssetPath(asset);
                 string guid = AssetDatabase.AssetPathToGUID(path);

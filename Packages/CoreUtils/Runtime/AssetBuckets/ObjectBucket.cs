@@ -9,7 +9,7 @@ namespace CoreUtils.AssetBuckets {
     public class ObjectBucket : GenericAssetBucket<Object> {
 #if UNITY_EDITOR
         public override bool EDITOR_CanAdd(Object asset) {
-            return !Directory.Exists(AssetDatabase.GetAssetPath(asset)) && base.EDITOR_CanAdd(asset);
+            return asset && !Directory.Exists(AssetDatabase.GetAssetPath(asset)) && base.EDITOR_CanAdd(asset);
         }
 #endif
     }

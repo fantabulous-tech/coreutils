@@ -4,8 +4,8 @@ using UnityEditor;
 #endif
 
 namespace CoreUtils.AssetBuckets {
-    [CreateAssetMenu(menuName = "CoreUtils/Bucket/Prefab Bucket", order = (int)MenuOrder.Bucket)]
-    public class PrefabBucket : GenericAssetBucket<GameObject> {
+    [CreateAssetMenu(menuName = "CoreUtils/Bucket/Prefab Reference Bucket", order = (int)MenuOrder.Bucket)]
+    public class PrefabReferenceBucket : GenericAssetReferenceBucket<GameObject> {
 #if UNITY_EDITOR
         public override bool EDITOR_CanAdd(Object asset) {
             if (!asset) {
