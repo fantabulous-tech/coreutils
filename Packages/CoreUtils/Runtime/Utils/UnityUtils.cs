@@ -377,12 +377,22 @@ namespace CoreUtils {
             // Save initial rotation.
             Quaternion rotation = transform.localRotation;
             transform.localRotation = Quaternion.identity;
+
+            bool centerSet = false;
             bounds.center = transform.position;
+
+            void CheckCenter(Bounds b) {
+                if (!centerSet) {
+                    bounds.center = b.center;
+                    centerSet = true;
+                }
+            }
 
             if (type == BoundsType.All || type == BoundsType.Collider) {
                 Collider[] colliders = transform.GetComponentsInChildren<Collider>();
                 foreach (Collider c in colliders) {
                     if (c != excluded && !c.isTrigger) {
+                        CheckCenter(c.bounds);
                         bounds = CombineBounds(bounds, c.bounds);
                     }
                 }
@@ -391,8 +401,13 @@ namespace CoreUtils {
             if (type == BoundsType.All || type == BoundsType.Renderer) {
                 Renderer[] renderers = transform.GetComponentsInChildren<Renderer>();
                 foreach (Renderer renderer in renderers) {
+                    CheckCenter(renderer.bounds);
                     bounds = CombineBounds(bounds, renderer.bounds);
                 }
+            }
+
+            if (!centerSet) {
+                bounds.center = transform.position;
             }
 
             // Restore initial rotation.
