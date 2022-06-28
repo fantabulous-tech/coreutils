@@ -14,7 +14,7 @@ namespace CoreUtils.AssetBuckets {
 
         private float m_IDColumnWidth;
         private float m_SourceObjectColumnWidth;
-        protected float m_AssetObjectColumnWidth;
+        private float m_AssetObjectColumnWidth;
         private readonly List<AssetListItem> m_Duplicates = new List<AssetListItem>();
         private AssetListItem[] m_SourceItems = { };
         private AssetListItem[] m_AssetItems = { };
