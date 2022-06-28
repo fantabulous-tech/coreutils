@@ -69,7 +69,12 @@ namespace CoreUtils.AssetBuckets {
         public T[] Items {
             get {
                 try {
-                    return AssetRefs.Select(a => a.Asset).Cast<T>().ToArray();
+                    return AssetRefs.Where(a => {
+                        if (!a.Asset) {
+                            Debug.LogWarning($"MISSING REFERENCE: {name} has a missing reference to {a.Name}. This bucket should be refreshed. Click me to select this bucket.\n{this.FullName(FullName.Parts.AssetPath)}", this);
+                        }
+                        return a.Asset;
+                    }).Select(a => a.Asset).Cast<T>().ToArray();
                 }
                 catch (Exception e) {
                     Debug.LogException(e, this);
