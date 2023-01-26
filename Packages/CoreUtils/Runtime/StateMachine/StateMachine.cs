@@ -31,6 +31,8 @@ namespace CoreUtils {
             }
         }
 
+        public GameObject DefaultState => m_DefaultState;
+
         public GameObject FirstState => transform.childCount > 0 ? transform.GetChild(0).gameObject : null;
         public GameObject LastState => transform.childCount > 0 ? transform.GetChild(transform.childCount - 1).gameObject : null;
 
