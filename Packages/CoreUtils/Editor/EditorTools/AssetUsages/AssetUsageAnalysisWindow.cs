@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static CoreUtils.Editor.AssetUsages.GuidDataService;
 
 namespace CoreUtils.Editor.AssetUsages {
     public class AssetUsageAnalysisWindow : EditorWindow {
@@ -47,7 +45,7 @@ namespace CoreUtils.Editor.AssetUsages {
             m_FileTypeFilters.Clear();
             m_FileTypeFilters.Add(kAll);
 
-            foreach(FileEntryCount file in m_Files) {
+            foreach (FileEntryCount file in m_Files) {
                 string extension = Path.GetExtension(file.Path);
                 if (!m_FileTypeFilters.Contains(extension)) {
                     m_FileTypeFilters.Add(extension);
@@ -66,7 +64,11 @@ namespace CoreUtils.Editor.AssetUsages {
             m_FileList = new ListView();
             m_FileList.itemsSource = m_FilteredFiles;
             m_FileList.selectionType = SelectionType.Single;
+#if UNITY_2021_1_OR_NEWER
+            m_FileList.fixedItemHeight = 16;
+#else
             m_FileList.itemHeight = 16;
+#endif
             m_FileList.makeItem = OnMakeFileItem;
             m_FileList.bindItem = OnBindFileItem;
             m_FileList.style.flexGrow = 1.0f;
@@ -106,15 +108,18 @@ namespace CoreUtils.Editor.AssetUsages {
                         m_FilteredFiles.Add(file);
                     }
                 }
-            }
-            else {
+            } else {
                 m_FilteredFiles.AddRange(m_Files);
             }
 
             if (m_FileList != null) {
                 m_FileList.itemsSource = m_FilteredFiles;
+#if UNITY_2021_1_OR_NEWER
+                m_FileList.Rebuild();
+#else
                 m_FileList.Refresh();
-            }            
+#endif
+            }
 
             return filter;
         }
