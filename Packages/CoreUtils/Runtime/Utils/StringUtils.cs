@@ -21,9 +21,11 @@ namespace CoreUtils {
             if (search.IsNullOrEmpty()) {
                 return true;
             }
+
             if (text.IsNullOrEmpty()) {
                 return false;
             }
+
             return text.IndexOf(search, comparisonType) >= 0;
         }
 
@@ -49,10 +51,12 @@ namespace CoreUtils {
             if (converter == null) {
                 converter = v => v.ToString();
             }
+
             return strings.Aggregate(new StringBuilder(prepend), (c, n) => {
                 if (c.Length > prepend.Length) {
                     return c.Append(sep).Append(converter(n));
                 }
+
                 return c.Append(converter(n));
             }).Append(append).ToString();
         }
@@ -114,6 +118,7 @@ namespace CoreUtils {
                 if (startIndex == -1) {
                     break;
                 }
+
                 originalString = originalString.Substring(0, startIndex) + newValue + originalString.Substring(startIndex + oldValue.Length);
                 startIndex += newValue.Length;
             }
@@ -150,11 +155,14 @@ namespace CoreUtils {
                 if (testArray[i].Length <= 1 && removeSingleLetters) {
                     continue;
                 }
+
                 if (sb.Length != 0) {
                     sb.Append(" ");
                 }
+
                 sb.Append(testArray[i]);
             }
+
             return sb.ToString();
         }
 
@@ -165,11 +173,14 @@ namespace CoreUtils {
                 if (testArray[i].Length <= 1 && removeSingleLetters) {
                     continue;
                 }
+
                 if (sb.Length != 0) {
                     sb.Append(" ");
                 }
+
                 sb.Append(testArray[i].Trim());
             }
+
             return sb.ToString();
         }
 
@@ -180,11 +191,14 @@ namespace CoreUtils {
                 if (testArray[i].Length == 1 && !char.IsDigit(testArray[i][0])) {
                     continue;
                 }
+
                 if (sb.Length != 0) {
                     sb.Append(" ");
                 }
+
                 sb.Append(testArray[i]);
             }
+
             return sb.ToString();
         }
 
@@ -221,6 +235,10 @@ namespace CoreUtils {
             return Regex.Replace(text, @"(?:(?<!\b)([A-Z])|\s+)", m => "_" + (m.Captures.Count > 0 ? m.Captures[1].ToString().ToLower() : ""), RegexOptions.Singleline).ToLower();
         }
 
+        public static string ToKebab(this string text) {
+            return Regex.Replace(text, @"(?:(?<!\b)([A-Z])|\s+)", m => "-" + (m.Captures.Count > 0 ? m.Captures[1].ToString().ToLower() : ""), RegexOptions.Singleline).ToLower();
+        }
+
         public static string FromCamel(this string text) {
             return Regex.Replace(text, "(?<=[a-z])([A-Z0-9])", " $1").ToCapitalized(true);
         }
@@ -230,21 +248,26 @@ namespace CoreUtils {
             if (text.Length == 0) {
                 return "";
             }
+
             if (text.Length == 1) {
                 return text.ToLowerInvariant();
             }
+
             string camel = Regex.Replace(text, "[\\W_]+", " ", RegexOptions.Singleline);
             camel = Regex.Replace(camel, "(.)([A-Z][a-z])", "$1 $2");
             camel = camel.ToCapitalized(true).Replace(" ", "");
             if (camel.Length == 0) {
                 return "";
             }
+
             if (camel.Length == 1) {
                 return camel.ToLowerInvariant();
             }
+
             if (firstLower) {
                 return camel.Substring(0, 1).ToLowerInvariant() + camel.Substring(1);
             }
+
             return camel;
         }
     }
