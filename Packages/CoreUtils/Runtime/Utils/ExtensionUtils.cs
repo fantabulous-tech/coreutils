@@ -19,6 +19,14 @@ namespace CoreUtils {
             return Mathf.Abs(a.x - b.x) < epsilon && Mathf.Abs(a.y - b.y) < epsilon && Mathf.Abs(a.z - b.z) < epsilon;
         }
 
+        public static bool Approximately(this Rect a, Rect b) {
+            return Mathf.Approximately(a.x, b.x) && Mathf.Approximately(a.y, b.y) && Mathf.Approximately(a.width, b.width) && Mathf.Approximately(a.height, b.height);
+        }
+
+        public static bool Approximately(this Rect a, Rect b, float epsilon) {
+            return Mathf.Abs(a.x - b.x) < epsilon && Mathf.Abs(a.y - b.y) < epsilon && Mathf.Abs(a.width - b.width) < epsilon && Mathf.Abs(a.height - b.height) < epsilon;
+        }
+
         public static bool Approximately(this Quaternion a, Quaternion b) {
             return Mathf.Approximately(a.x, b.x) && Mathf.Approximately(a.y, b.y) && Mathf.Approximately(a.z, b.z) && Mathf.Approximately(a.w, b.w);
         }
