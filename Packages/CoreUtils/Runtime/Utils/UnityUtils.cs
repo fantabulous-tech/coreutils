@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
@@ -481,6 +482,27 @@ namespace CoreUtils {
 
         public static int Mod(int a, int b) {
             return (a%b + b)%b;
+        }
+
+        public static bool TryParse(string rectString, out Rect rect) {
+            // (x:50.00, y:50.00, width:1920.00, height:1080.00)
+            Regex regex = new Regex(@"\(?\s*?x\s*\:\s*(?'x'\d+(\.\d+)?)\s*,\s*y\s*\:\s*(?'y'\d+(\.\d+)?)\s*,\s*width\s*\:\s*(?'width'\d+(\.\d+)?)\s*,\s*height\s*\:\s*(?'height'\d+(\.\d+)?)\)?");
+            Match match = regex.Match(rectString);
+            if (match.Success) {
+                if (float.TryParse(match.Groups["x"].Value, out float x)) {
+                    if (float.TryParse(match.Groups["y"].Value, out float y)) {
+                        if (float.TryParse(match.Groups["width"].Value, out float width)) {
+                            if (float.TryParse(match.Groups["height"].Value, out float height)) {
+                                rect = new Rect(x, y, width, height);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            rect = Rect.zero;
+            return false;
         }
     }
 }
