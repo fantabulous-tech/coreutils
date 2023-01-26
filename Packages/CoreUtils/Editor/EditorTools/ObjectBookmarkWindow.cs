@@ -217,7 +217,12 @@ namespace CoreUtils.Editor {
         private class AssetBookmark : ObjectBookmark {
             private readonly string m_GUID;
 
-            protected override string FullName => AssetDatabase.GUIDToAssetPath(m_GUID);
+            protected override string FullName {
+                get {
+                    string assetPath = AssetDatabase.GUIDToAssetPath(m_GUID);
+                    return assetPath.IsNullOrEmpty() ? $"Missing: {m_GUID.Substring(0, 7)}..." : assetPath;
+                }
+            }
             public override string ItemRef => m_GUID;
 
             public AssetBookmark(Object obj) {
@@ -231,7 +236,7 @@ namespace CoreUtils.Editor {
 
             public override bool OnGUI(Rect rect) {
                 string assetPath = AssetDatabase.GUIDToAssetPath(m_GUID);
-                GUI.enabled = assetPath != null;
+                GUI.enabled = !assetPath.IsNullOrEmpty();
 
                 Rect selectButtonRect = new Rect(rect.x, rect.y, rect.width - kButtonWidth*2 - kPadding*2, rect.height);
                 Rect openAssetButtonRect = new Rect(rect.x + selectButtonRect.width + kPadding, rect.y, kButtonWidth, rect.height);
