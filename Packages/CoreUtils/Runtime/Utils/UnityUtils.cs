@@ -369,16 +369,14 @@ namespace CoreUtils {
             Renderer
         }
 
-        public static Bounds GetBounds(Transform transform, BoundsType type = BoundsType.All, Collider excluded = null) {
+        public static Bounds GetBounds(Transform transform, BoundsType type = BoundsType.All, Collider excludedCollider = null, Transform excludedChild = null) {
             Bounds bounds = new Bounds {size = Vector3.zero};
             if (!transform) {
                 return bounds;
             }
 
-            // Save initial rotation.
-            Quaternion rotation = transform.localRotation;
-            transform.localRotation = Quaternion.identity;
-
+            // If the object is offset inside of the prefab, we need to use the center of the first bounds
+            // we find to make sure it's correct.
             bool centerSet = false;
             bounds.center = transform.position;
 
@@ -392,9 +390,9 @@ namespace CoreUtils {
             if (type == BoundsType.All || type == BoundsType.Collider) {
                 Collider[] colliders = transform.GetComponentsInChildren<Collider>();
                 foreach (Collider c in colliders) {
-                    if (c != excluded && !c.isTrigger) {
+                    if (c != excludedCollider && !c.isTrigger && c.transform != excludedChild) {
                         CheckCenter(c.bounds);
-                        bounds = CombineBounds(bounds, c.bounds);
+                        bounds.Encapsulate(c.bounds);
                     }
                 }
             }
@@ -402,26 +400,13 @@ namespace CoreUtils {
             if (type == BoundsType.All || type == BoundsType.Renderer) {
                 Renderer[] renderers = transform.GetComponentsInChildren<Renderer>();
                 foreach (Renderer renderer in renderers) {
-                    CheckCenter(renderer.bounds);
-                    bounds = CombineBounds(bounds, renderer.bounds);
+                    if (excludedChild == null || !renderer.transform.IsChildOf(excludedChild)) {
+                        CheckCenter(renderer.bounds);
+                        bounds.Encapsulate(renderer.bounds);
+                    }
                 }
             }
 
-            if (!centerSet) {
-                bounds.center = transform.position;
-            }
-
-            // Restore initial rotation.
-            transform.localRotation = rotation;
-
-            return bounds;
-        }
-
-        private static Bounds CombineBounds(Bounds bounds, Bounds subBounds) {
-            bounds.max = new Vector3(Mathf.Max(subBounds.max.x, bounds.max.x), Mathf.Max(subBounds.max.y, bounds.max.y),
-                Mathf.Max(subBounds.max.z, bounds.max.z));
-            bounds.min = new Vector3(Mathf.Min(subBounds.min.x, bounds.min.x), Mathf.Min(subBounds.min.y, bounds.min.y),
-                Mathf.Min(subBounds.min.z, bounds.min.z));
             return bounds;
         }
 
