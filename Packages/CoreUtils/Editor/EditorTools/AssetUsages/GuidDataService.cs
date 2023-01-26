@@ -62,14 +62,16 @@ namespace CoreUtils.Editor.AssetUsages {
             // Test for daily refresh.
             string lastScan = EditorPrefs.GetString(kLastScanKey);
 
-            if (DateTime.TryParse(lastScan, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime lastScanTime)) {
-                s_LastScan = lastScanTime;
-            } else {
-                s_LastScan = DateTime.MinValue;
-            }
+            if (!CoreUtilsSettings.DisableWeeklyScans) {
+                if (DateTime.TryParse(lastScan, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime lastScanTime)) {
+                    s_LastScan = lastScanTime;
+                } else {
+                    s_LastScan = DateTime.MinValue;
+                }
 
-            if (s_LastScan < DateTime.Today - TimeSpan.FromDays(7)) {
-                Refresh();
+                if (s_LastScan < DateTime.Today - TimeSpan.FromDays(7)) {
+                    Refresh();
+                }
             }
 
             AssetImportTracker.DelayedAssetsChanged -= OnAssetsChanged;
@@ -171,7 +173,9 @@ namespace CoreUtils.Editor.AssetUsages {
         private static void UpdateFileByPath(string path) {
             string guid = AssetDatabase.AssetPathToGUID(path);
             try {
-                UpdateAssetInGuidDatabase(path, new Guid(guid), true);
+                if (!guid.IsNullOrEmpty()) {
+                    UpdateAssetInGuidDatabase(path, new Guid(guid), true);
+                }                
             }
             catch (DllNotFoundException) {
                 Debug.LogError("Unable to update paths. SQLite DLL was not found. Please restart Unity.");
