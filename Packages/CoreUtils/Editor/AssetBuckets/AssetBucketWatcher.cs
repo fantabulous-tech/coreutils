@@ -127,7 +127,7 @@ namespace CoreUtils.AssetBuckets {
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => CanBeType(p, bucket.AssetSearchType))
                 .ToArray();
-            
+
             List<Object> newObjects = newPaths
                 .Select(p => AssetDatabase.LoadAssetAtPath(p, bucket.AssetSearchType))
                 .Where(o => o && bucket.EDITOR_CanAdd(o))
@@ -136,7 +136,7 @@ namespace CoreUtils.AssetBuckets {
             // Skip if the new object list is the same as the existing bucket objects.
             if (skipIfUnchanged && BucketIsUnchanged(bucket, newObjects)) {
                 return false;
-            }            
+            }
 
             bucket.EDITOR_Clear();
             bucket.EDITOR_ForceAdd(newObjects);
@@ -188,7 +188,7 @@ namespace CoreUtils.AssetBuckets {
 
             if (!forceRefresh) {
                 bucketUpdated |= bucket.EDITOR_UpdateAssets(updatedFiles);
-            }            
+            }
 
             if (bucketUpdated) {
                 bucket.EDITOR_Sort();
@@ -198,7 +198,7 @@ namespace CoreUtils.AssetBuckets {
                 return true;
             }
 
-            return false;            
+            return false;
         }
 
         private static bool BucketIsUnchanged(BaseAssetBucket bucket, List<Object> newObjects) {
@@ -208,6 +208,11 @@ namespace CoreUtils.AssetBuckets {
 
             for (int i = 0; i < bucket.AssetRefs.Count; i++) {
                 if (newObjects[i] != bucket.AssetRefs[i].Asset) {
+                    return false;
+                }
+
+                string assetName = bucket.EDITOR_GetAssetName(newObjects[i]).ToLower();
+                if (assetName != bucket.AssetRefs[i].Name) {
                     return false;
                 }
             }
