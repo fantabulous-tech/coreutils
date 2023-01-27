@@ -1,0 +1,98 @@
+trackSelection = true
+fetchPreview = true
+defaultFlags = 0
+keepOpen = false
+queryFolder = "Assets"
+onBoardingDoNotAskAgain = true
+showPackageIndexes = false
+showStatusBar = false
+scopes = {
+	"last_search.DA949528" = "first{25,sort{select{p:a:assets, @path, count{dep:ref=\"@path\"}}, @value, desc}}"
+	"OpenInspectorPreview.DA949528" = "0"
+	"currentGroup.DA949528" = "all"
+	"last_search.CE949528" = ""
+	"OpenInspectorPreview.CE949528" = "0"
+	"currentGroup.CE949528" = "all"
+	"last_search.10697386" = "aef7d7dc5c9ed5748b3d4aa3d923ab69"
+	"OpenInspectorPreview.10697386" = "0"
+	"currentGroup.10697386" = "all"
+	"last_search.9978C4D3" = "test"
+	"OpenInspectorPreview.9978C4D3" = "0"
+	"currentGroup.9978C4D3" = "all"
+	"last_search.DE949528" = ""
+	"OpenInspectorPreview.DE949528" = "0"
+	"currentGroup.DE949528" = "all"
+	"last_search.FC949528" = ""
+	"OpenInspectorPreview.FC949528" = "0"
+	"currentGroup.FC949528" = "all"
+}
+providers = {
+	adb = {
+		active = false
+		priority = 2500
+		defaultAction = null
+	}
+	asset = {
+		active = true
+		priority = 25
+		defaultAction = null
+	}
+	store = {
+		active = true
+		priority = 100
+		defaultAction = null
+	}
+	find = {
+		active = true
+		priority = 25
+		defaultAction = null
+	}
+	log = {
+		active = false
+		priority = 210
+		defaultAction = null
+	}
+	packages = {
+		active = true
+		priority = 90
+		defaultAction = null
+	}
+	performance = {
+		active = false
+		priority = 100
+		defaultAction = null
+	}
+	scene = {
+		active = true
+		priority = 50
+		defaultAction = null
+	}
+}
+objectSelectors = {
+}
+recentSearches = [
+	"first{25,sort{select{p:a:assets, @path, count{dep:ref=\\\"@path\\\"}}, @value, desc}}"
+	"ref={87993f690bf2795439d629e71c032c56"
+	"re"
+	"ma"
+	"aef7d7dc5c9ed5748b3d4aa3d923ab69"
+	"ref={aef7d7dc5c9ed5748b3d4aa3d923ab69"
+	"ref={"
+	"ref=Packages/tech.fantabulous.coreutils/Runtime/GameVariables/GameVariableBool.cs"
+	"r"
+	"ref={Packages/tech.fantabulous.coreutils/Runtime/GameVariables/GameVariableBool.cs"
+	"Packages/tech.fantabulous.coreutils/Runtime/GameVariables/GameVariableBool.cs"
+	"ref=\"AssetsPackages/tech.fantabulous.coreutils/Runtime/GameVariables/GameVariableBool.cs\""
+	"ref=\"Assets/Game Variables/Test Variable.asset"
+	"aef7d7dc5c9ed5748b3d4aa3d923ab69, @path}"
+]
+searchItemFavorites = [
+]
+savedSearchesSortOrder = 0
+showSavedSearchPanel = false
+expandedQueries = [
+]
+queryBuilder = false
+ignoredProperties = "id;name;classname;imagecontentshash"
+helperWidgetCurrentArea = "all"
+disabledIndexers = ""
