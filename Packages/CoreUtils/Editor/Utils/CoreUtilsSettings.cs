@@ -18,7 +18,6 @@ namespace CoreUtils.Editor {
 
         [SerializeField] private bool m_DisableAssetBucketScanning;
         [SerializeField] private bool m_DisableAssetGuidDatabase;
-        [SerializeField] private bool m_DisableWeeklyScans;
 
         private CoreUtilsSettings() {
             s_Instance = this;
@@ -39,11 +38,6 @@ namespace CoreUtils.Editor {
             }
         }
 
-        public static bool DisableWeeklyScans {
-            get => Instance.m_DisableWeeklyScans;
-            private set => SetBoolShared(ref Instance.m_DisableWeeklyScans, value);
-        }
-
         [SettingsProvider]
         private static SettingsProvider GetSettingsProvider() => new SettingsProvider("Project/CoreUtils", SettingsScope.Project) { guiHandler = searchContext => OnSettingsGUI() };
 
@@ -58,11 +52,6 @@ namespace CoreUtils.Editor {
             DisableAssetGuidDatabase = EditorGUILayout.Toggle(
                 new GUIContent("Disable GUID Database", "This stops tracking assets for the 'Asset Usages' window on file import."),
                 DisableAssetGuidDatabase
-            );
-
-            DisableWeeklyScans = EditorGUILayout.Toggle(
-                new GUIContent("Disable Weekly Scan", "This stops weekly database refresh. The weekly scan ensures that occassional missed files are caught. Disable to avoid this and do rescans manually."),
-                DisableWeeklyScans
             );
 
             EditorGUILayout.Space();
