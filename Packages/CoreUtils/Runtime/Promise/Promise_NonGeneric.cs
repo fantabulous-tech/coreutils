@@ -1036,7 +1036,7 @@ namespace RSG {
         /// <summary>
         ///     Convert a simple value directly into a resolved promise.
         /// </summary>
-        private static IPromise resolvedPromise = new Promise(PromiseState.Resolved);
+        private static readonly IPromise resolvedPromise = new Promise(PromiseState.Resolved);
 
         public static IPromise Resolved() {
             return resolvedPromise;
