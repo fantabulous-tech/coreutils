@@ -85,7 +85,7 @@ namespace CoreUtils.Editor {
                     gos = UnityUtils.GetRootObjects().ToArray();
                     break;
                 case Modes.Prefabs:
-                    if (EditorUtility.DisplayCancelableProgressBar("Missing Scirpts", "Collecting all prefabs...", 0.05f)) {
+                    if (EditorUtility.DisplayCancelableProgressBar("Finding missing scripts...", "Collecting all prefabs...", 0.05f)) {
                         Mode = m_LastMode;
                         return;
                     }
@@ -131,7 +131,7 @@ namespace CoreUtils.Editor {
                 rootInfos.Add(rootInfo);
             }
 
-            if (total > kProgressBarThreshold && EditorUtility.DisplayCancelableProgressBar("MissingScripts", "Searching " + go.name, index*1f/total)) {
+            if (total > kProgressBarThreshold && EditorUtility.DisplayCancelableProgressBar("Finding missing scripts...", "Searching " + go.name, index*1f/total)) {
                 Mode = m_LastMode;
                 return true;
             }
@@ -168,10 +168,11 @@ namespace CoreUtils.Editor {
                 using (new EditorGUILayout.HorizontalScope()) {
                     GUILayout.FlexibleSpace();
                     if (m_RootInfos != null && m_RootInfos.Count > 0) {
-                        GUILayout.Label(string.Format("{0:N0} missing references in {1:N0} GameObjects", m_MissingTotal, m_SearchTotal), EditorStyles.boldLabel);
+                        GUILayout.Label($"{m_MissingTotal:N0} missing references in {m_SearchTotal:N0} GameObjects", EditorStyles.boldLabel);
                     } else {
-                        GUILayout.Label(string.Format("No missing references found in {0:N0} GameObjects", m_SearchTotal), EditorStyles.boldLabel);
+                        GUILayout.Label($"No missing references found in {m_SearchTotal:N0} GameObjects", EditorStyles.boldLabel);
                     }
+
                     GUILayout.FlexibleSpace();
                 }
 
@@ -202,6 +203,7 @@ namespace CoreUtils.Editor {
                     if (m_MissingScripts != null) {
                         return m_MissingScripts.Count;
                     }
+
                     return 0;
                 }
             }
@@ -210,7 +212,7 @@ namespace CoreUtils.Editor {
 
             public int SearchTotal { get; private set; }
 
-            public RootObjectInfo() { } //  --- Required before deserialization 
+            public RootObjectInfo() { } //  --- Required before deserialization
 
             public RootObjectInfo(GameObject go) {
                 m_GO = go;
@@ -228,6 +230,7 @@ namespace CoreUtils.Editor {
                         rect.xMax += 20;
                         EditorGUI.ObjectField(rect, m_GO, m_GO.GetType(), true);
                     }
+
                     if (GUILayout.Button("Clear Object", GUILayout.Width(100))) {
                         Clear();
                     }
@@ -283,7 +286,7 @@ namespace CoreUtils.Editor {
             [SerializeField] private int m_Index;
             [SerializeField] private string m_DisplayPath;
 
-            public MissingScript() { } //  --- Required before deserialization 
+            public MissingScript() { } //  --- Required before deserialization
 
             public MissingScript(GameObject go, int index, Object root) {
                 m_GO = go;
@@ -291,14 +294,12 @@ namespace CoreUtils.Editor {
                 string rootPath = root.FullName(FullName.Parts.Name);
                 string goPath = go.FullName(FullName.Parts.Name);
                 string relativePath = goPath.Replace(rootPath, "");
-                m_DisplayPath = string.Format("{0}{1} #{2}", root.name, relativePath, m_Index + 1);
+                m_DisplayPath = $"{root.name}{relativePath} #{m_Index + 1}";
             }
 
             public void Clear() {
-                SerializedObject serializedObject = new SerializedObject(m_GO);
-                SerializedProperty componentProperty = serializedObject.FindProperty("m_Component");
-                componentProperty.DeleteArrayElementAtIndex(m_Index);
-                serializedObject.ApplyModifiedProperties();
+                GameObjectUtility.RemoveMonoBehavioursWithMissingScript(m_GO);
+                EditorUtility.SetDirty(m_GO);
                 s_Dirty = true;
             }
 
