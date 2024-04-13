@@ -11,6 +11,7 @@ namespace CoreUtils {
             if (keys == null || values == null) {
                 return new Dictionary<TKey, TValue>();
             }
+
             // Both lists SHOULD be the same size. Clamp to the bounds of the smallest list.
             Debug.Assert(keys.Count == values.Count, string.Format("Key count ({0}) should be the same as value count ({1}).", keys.Count, values.Count));
             int bounds = Math.Min(keys.Count, values.Count);
@@ -19,6 +20,7 @@ namespace CoreUtils {
             for (int i = 0; i < bounds; i++) {
                 dict[keys[i]] = values[i];
             }
+
             return dict;
         }
 
@@ -26,6 +28,7 @@ namespace CoreUtils {
             if (list == null || list.Count == 0) {
                 return default;
             }
+
             int index = Random.Range(0, list.Count);
             return list[index];
         }
@@ -34,11 +37,13 @@ namespace CoreUtils {
             if (dictionary == null) {
                 return new List<TValue>();
             }
+
             dictionary.TryGetValue(key, out List<TValue> list);
             if (list == null) {
                 list = new List<TValue>();
                 dictionary.Add(key, list);
             }
+
             return list;
         }
 
@@ -81,15 +86,18 @@ namespace CoreUtils {
             if (collection == null) {
                 return;
             }
+
             List<T> toPrune = null;
             foreach (T item in collection) {
                 if (item == null) {
                     if (toPrune == null) {
                         toPrune = new List<T>();
                     }
+
                     toPrune.Add(item);
                 }
             }
+
             if (toPrune != null) {
                 foreach (T item in toPrune) {
                     collection.Remove(item);
@@ -101,6 +109,7 @@ namespace CoreUtils {
             if (dictionary == null) {
                 return;
             }
+
             List<TKey> toPrune = null;
             foreach (KeyValuePair<TKey, TValue> kvp in dictionary) {
                 TKey item = kvp.Key;
@@ -108,9 +117,11 @@ namespace CoreUtils {
                     if (toPrune == null) {
                         toPrune = new List<TKey>();
                     }
+
                     toPrune.Add(item);
                 }
             }
+
             if (toPrune != null) {
                 foreach (TKey item in toPrune) {
                     dictionary.Remove(item);
@@ -128,21 +139,32 @@ namespace CoreUtils {
                     bestScore = score;
                 }
             }
+
             return best;
         }
 
-        public static T GetFirst<T>(this IList<T> list) {
+        public static T GetFirstOrDefault<T>(this IList<T> list, T def) {
             if (list == null || list.Count == 0) {
-                return default;
+                return def;
             }
+
             return list[0];
         }
 
-        public static T GetLast<T>(this IList<T> list) {
+        public static T GetFirst<T>(this IList<T> list) {
+            return list.GetFirstOrDefault(default);
+        }
+
+        public static T GetLastOrDefault<T>(this IList<T> list, T def) {
             if (list == null || list.Count == 0) {
-                return default;
+                return def;
             }
+
             return list[list.Count - 1];
+        }
+
+        public static T GetLast<T>(this IList<T> list) {
+            return list.GetLastOrDefault(default);
         }
 
         public static bool Contains(this IList<string> list, string test, StringComparison comparisonType) {
