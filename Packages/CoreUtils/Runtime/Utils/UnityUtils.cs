@@ -369,8 +369,8 @@ namespace CoreUtils {
             Renderer
         }
 
-        public static Bounds GetBounds(Transform transform, BoundsType type = BoundsType.All, Collider excludedCollider = null, Transform excludedChild = null) {
-            Bounds bounds = new Bounds {size = Vector3.zero};
+        public static Bounds GetBounds(Transform transform, BoundsType type = BoundsType.All, Collider excludedCollider = null, Transform excludedChild = null, Func<Renderer, bool> canUseRenderer = null) {
+            Bounds bounds = new Bounds {center = transform.position, size = Vector3.zero};
             if (!transform) {
                 return bounds;
             }
@@ -378,7 +378,6 @@ namespace CoreUtils {
             // If the object is offset inside of the prefab, we need to use the center of the first bounds
             // we find to make sure it's correct.
             bool centerSet = false;
-            bounds.center = transform.position;
 
             void CheckCenter(Bounds b) {
                 if (!centerSet) {
@@ -400,10 +399,16 @@ namespace CoreUtils {
             if (type == BoundsType.All || type == BoundsType.Renderer) {
                 Renderer[] renderers = transform.GetComponentsInChildren<Renderer>();
                 foreach (Renderer renderer in renderers) {
-                    if (excludedChild == null || !renderer.transform.IsChildOf(excludedChild)) {
-                        CheckCenter(renderer.bounds);
-                        bounds.Encapsulate(renderer.bounds);
+                    if (canUseRenderer != null && !canUseRenderer(renderer)) {
+                        continue;
                     }
+
+                    if (excludedChild != null && renderer.transform.IsChildOf(excludedChild)) {
+                        continue;
+                    }
+
+                    CheckCenter(renderer.bounds);
+                    bounds.Encapsulate(renderer.bounds);
                 }
             }
 
