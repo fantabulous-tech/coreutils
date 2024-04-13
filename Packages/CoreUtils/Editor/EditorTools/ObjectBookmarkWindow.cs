@@ -4,6 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 
 namespace CoreUtils.Editor {
@@ -280,7 +281,7 @@ namespace CoreUtils.Editor {
                 Rect deleteButtonRect = new Rect(selectButtonRect.x + selectButtonRect.width + kPadding, rect.y, kButtonWidth, rect.height);
                 UpdateDisplayString(selectButtonRect.width);
 
-                GameObject displayObject = GameObject.Find(m_ScenePath);
+                GameObject displayObject = GetSceneGameObject(m_ScenePath);
                 GUI.enabled = displayObject != null;
 
                 if (GUI.Button(selectButtonRect, new GUIContent(m_DisplayString, "Select asset in Project Window."))) {
@@ -294,6 +295,44 @@ namespace CoreUtils.Editor {
                 }
 
                 return false;
+            }
+
+            private static GameObject GetSceneGameObject(string path) {
+                for (int i = 0; i < SceneManager.sceneCount; i++) {
+                    Scene scene = SceneManager.GetSceneAt(i);
+                    foreach (GameObject rootGameObject in scene.GetRootGameObjects()) {
+                        Transform subObject = GetObjectFromPath(rootGameObject.transform, path);
+
+                        if (subObject != null) {
+                            return subObject.gameObject;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            private static Transform GetObjectFromPath(Transform root, string path) {
+                if (path == root.name) {
+                    return root;
+                }
+
+                string prefix = root.name + "/";
+
+                if (!path.StartsWith(prefix)) {
+                    return null;
+                }
+
+                string subPath = path[prefix.Length..];
+                for (int i = 0; i < root.childCount; i++) {
+                    Transform subObject = GetObjectFromPath(root.GetChild(i), subPath);
+
+                    if (subObject) {
+                        return subObject;
+                    }
+                }
+
+                return null;
             }
 
             private static string GetGameObjectPath(Transform transform) {
