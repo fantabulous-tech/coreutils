@@ -149,7 +149,7 @@ namespace CoreUtils {
         }
 
         private static string RemoveSymbols(string text, bool removeSingleLetters) {
-            string[] testArray = text.Split(new[] {' ', '\t', '.', '_', '#', '$', '%'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] testArray = text.Split(new[] {' ', '\t', '.', '_', '-', '#', '$', '%'}, StringSplitOptions.RemoveEmptyEntries);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < testArray.Length; i++) {
                 if (testArray[i].Length <= 1 && removeSingleLetters) {
@@ -185,7 +185,7 @@ namespace CoreUtils {
         }
 
         private static string RemoveSingleLetters(string text) {
-            string[] testArray = text.Split(new[] {' ', '\t', '.', '_', '#', '$', '%'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] testArray = text.Split(new[] {' ', '\t', '.', '_', '-', '#', '$', '%'}, StringSplitOptions.RemoveEmptyEntries);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < testArray.Length; i++) {
                 if (testArray[i].Length == 1 && !char.IsDigit(testArray[i][0])) {
@@ -232,11 +232,11 @@ namespace CoreUtils {
         }
 
         public static string ToUnderscored(this string text) {
-            return Regex.Replace(text, @"(?:(?<!\b)([A-Z])|\s+)", m => "_" + (m.Captures.Count > 0 ? m.Captures[1].ToString().ToLower() : ""), RegexOptions.Singleline).ToLower();
+            return Regex.Replace(text, @"(?:(?<!\b)([A-Z])|\s+)", m => "_" + (m.Captures.Count > 1 ? m.Captures[1].ToString().ToLower() : ""), RegexOptions.Singleline).ToLower();
         }
 
         public static string ToKebab(this string text) {
-            return Regex.Replace(text, @"(?:(?<!\b)([A-Z])|\s+)", m => "-" + (m.Captures.Count > 0 ? m.Captures[1].ToString().ToLower() : ""), RegexOptions.Singleline).ToLower();
+            return Regex.Replace(text, @"(?:(?<!\b)([A-Z])|\s+)", m => "-" + (m.Captures.Count > 1 ? m.Captures[1].ToString().ToLower() : ""), RegexOptions.Singleline).ToLower();
         }
 
         public static string FromCamel(this string text) {
