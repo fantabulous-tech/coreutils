@@ -29,6 +29,8 @@ namespace CoreUtils.Editor.AssetUsages {
 
         private string Summary => UnityUtils.GetOrSet(ref m_Summary, () => m_Targets.Select(o => o ? o.name : "--null--").AggregateToString());
 
+        public UsageInfo(Object obj) : this(new [] { obj }) { }
+
         public UsageInfo(Object[] targets) {
             m_Targets = targets;
             m_Guids = GetGUIDs(m_Targets).ToArray();
@@ -41,7 +43,7 @@ namespace CoreUtils.Editor.AssetUsages {
             }
 
             float width = AssetUsageWindow.Instance.position.width - 10;
-            int columns = Mathf.Clamp((int) (width/100), 1, m_Targets.Length);
+            int columns = Mathf.Clamp((int)(width/100), 1, m_Targets.Length);
             float columnWidth = (width + 8)/columns;
 
             GUILayout.Label(m_Guids.Length != 1 ? "Selected Assets x" + m_Guids.Length.ToString("N0") : "Selected Asset", EditorStyles.boldLabel);
@@ -123,6 +125,7 @@ namespace CoreUtils.Editor.AssetUsages {
                 Selection.objects = selection;
                 EditorGUIUtility.PingObject(Selection.activeObject);
             }
+
             GUILayout.EndVertical();
 
             GUILayout.EndHorizontal();

@@ -92,7 +92,7 @@ namespace CoreUtils.Editor.AssetUsages {
         private void SelectionChanged(Object[] selection, bool force) {
             Object[] oldSelection = m_SelectedObjects;
 
-            // We don't need to update if the selection is null. Just clear m_LastInfo in case it's set.
+            // We don't need to update if the selection is null.
             if (selection == null || selection.Length == 0) {
                 return;
             }
@@ -148,9 +148,9 @@ namespace CoreUtils.Editor.AssetUsages {
             return path.IsNullOrEmpty() ? null : AssetDatabase.LoadAssetAtPath<Object>(path);
         }
 
-        private void GoBack() => Selection.objects = m_GoBackStack.LastOrDefault();
+        private void GoBack() => Selection.objects = m_GoBackStack.LastOrDefault(l => l != null && l.Any(o => o));
 
-        private void GoForward() => Selection.objects = m_GoForwardStack.LastOrDefault();
+        private void GoForward() => Selection.objects = m_GoForwardStack.LastOrDefault(l => l != null && l.Any(o => o));
 
         // Special version that will pop again if it finds a null result. (e.g. the object has been deleted)
         private static void Pop<T>(IList<T> list) where T : class {

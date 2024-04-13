@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using SQLite4Unity3d;
+using UnityEditor;
 
 namespace CoreUtils.Editor.AssetUsages {
     [Serializable]
@@ -19,12 +20,22 @@ namespace CoreUtils.Editor.AssetUsages {
 
         public bool Exists => File.Exists(Path);
 
-        public string GuidString => Guid.ToString().Replace("-", "");
+        public string GuidString => Guid.ToString("N");
 
         public FileEntry() { }
 
         public FileEntry(Guid guid, string path) {
             Guid = guid;
+            Path = path;
+        }
+
+        public FileEntry(Guid guid) {
+            Guid = guid;
+            Path = AssetDatabase.GUIDToAssetPath(guid.ToString("N"));
+        }
+
+        public FileEntry(string path) {
+            Guid = new Guid(AssetDatabase.AssetPathToGUID(path));
             Path = path;
         }
 

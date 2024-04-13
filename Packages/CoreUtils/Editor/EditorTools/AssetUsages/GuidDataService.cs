@@ -175,7 +175,7 @@ namespace CoreUtils.Editor.AssetUsages {
             try {
                 if (!guid.IsNullOrEmpty()) {
                     UpdateAssetInGuidDatabase(path, new Guid(guid), true);
-                }                
+                }
             }
             catch (DllNotFoundException) {
                 Debug.LogError("Unable to update paths. SQLite DLL was not found. Please restart Unity.");
@@ -272,6 +272,16 @@ ORDER BY FileEntry.Path ASC
         public static List<FileEntry> LoadUsedBy(Guid[] guids) {
             if (!guids.Any()) {
                 return new List<FileEntry>();
+            }
+
+            if (guids.Length > 900) {
+                int index = 0;
+                List<FileEntry> collectedResults = new List<FileEntry>();
+                while (index < guids.Length) {
+                    collectedResults.AddRange(LoadUsedBy(guids.Skip(index).Take(900).ToArray()));
+                    index += 900;
+                }
+                return collectedResults; //.Where(f => !guids.Contains(f.Guid)).ToList();
             }
 
             string search = guids.AggregateToString(" OR ", g => "UsageEntry.ResourceGuid = \"" + g + "\"");
