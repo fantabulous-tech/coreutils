@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
@@ -18,7 +18,7 @@ internal static class ExampleSearchService {
             results.AddRange(SearchService.GetItems(searchContext, SearchFlags.Synchronous));
 
             // ***IMPORTANT***: Wait for the search to finish. Note that often times, a search
-            // provider will need to be ticked by EditorApplication to yield new search items. Unity doesn't recommends
+            // provider will need to be ticked by EditorApplication to yield new search items. Unity doesn't recommend
             // to do an active wait on the main thread to process search results.
             while (searchContext.searchInProgress) {
                 ;
